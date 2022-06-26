@@ -28,7 +28,7 @@ def find_between(s, first, last):
 question_on_insurance = "How many people own a Saab?"
     
 payload = {
-    "context": question_on_insurance,
+    "question": question_on_insurance,
     "token_max_length": 340,
     "temperature": 0.90,
     "top_p": 0.95,
