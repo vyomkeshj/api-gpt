@@ -1,14 +1,7 @@
 # gpt-j-api 🦜
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/vicgalle/gpt-j-api?color=blueviolet)
-![Python version](https://img.shields.io/badge/python-3.7-blueviolet)
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/vicgalle/gpt-j-api)
-![API up](https://github.com/vicgalle/gpt-j-api/actions/workflows/test.yml/badge.svg)
 
-
-An API to interact with the GPT-J language model and variants! You can use and test the model in two different ways:
-
-* Streamlit web app at http://api.vicgalle.net:8000/ 
-* The proper API, documented at http://api.vicgalle.net:5000/docs
+* Streamlit web app at 0.0.0.0:8000/ 
+* The proper API, documented at 0.0.0.0:5000/docs
 
 ## Open API endpoints 🔓
 
@@ -36,7 +29,7 @@ payload = {
     "temperature": 1.0,
     "top_p": 0.9,
 }
-response = requests.post("http://api.vicgalle.net:5000/generate", params=payload).json()
+response = requests.post("0.0.0.0:5000/generate", params=payload).json()
 print(response)
 ```
 
@@ -47,7 +40,7 @@ import requests
 payload = { 
     "sequence" : "The movie started slow, but in the end was absolutely amazing!", 
     "labels" : "positive,neutral,negative"}
-response = requests.post("http://api.vicgalle.net:5000/classify", params=payload).json()
+response = requests.post("0.0.0.0:5000/classify", params=payload).json()
 print(response)
 ```
 
@@ -55,7 +48,7 @@ print(response)
 
 ```bash
 curl -X 'POST' \
-  'http://api.vicgalle.net:5000/generate?context=In%20a%20shocking%20finding%2C%20scientists%20discovered%20a%20herd%20of%20unicorns%20living%20in%20a%20remote%2C%20previously%20unexplored%20valley%2C%20in%20the%20Andes%20Mountains.%20Even%20more%20surprising%20to%20the%20researchers%20was%20the%20fact%20that%20the%20unicorns%20spoke%20perfect%20English.&token_max_length=512&temperature=1&top_p=0.9' \
+  '0.0.0.0:5000/generate?context=In%20a%20shocking%20finding%2C%20scientists%20discovered%20a%20herd%20of%20unicorns%20living%20in%20a%20remote%2C%20previously%20unexplored%20valley%2C%20in%20the%20Andes%20Mountains.%20Even%20more%20surprising%20to%20the%20researchers%20was%20the%20fact%20that%20the%20unicorns%20spoke%20perfect%20English.&token_max_length=512&temperature=1&top_p=0.9' \
   -H 'accept: application/json' \
   -d ''
 ```
@@ -87,19 +80,3 @@ Just run
 ```
 python3 -m streamlit run streamlit_app.py --server.port 8000
 ```
-
-## Contact
-
-If you have a request, I'll be happy to help you at `vgallegoalcala at gmail dot com`
-
-
-## Sponsors 🦄
-
-Special thanks to the following people, who sponsor this project! <3
-
-* [Aspie96](https://github.com/Aspie96)
-
-
-## Acknowledgements ✨
-
-Many thanks to the support of the TPU Research Cloud, https://sites.research.google/trc/
