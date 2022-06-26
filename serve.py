@@ -42,7 +42,7 @@ params["optimizer"] = optax.scale(0)
 mesh_shape = (jax.device_count() // cores_per_replica, cores_per_replica)
 devices = np.array(jax.devices()).reshape(mesh_shape)
 
-# jax.experimental.maps.thread_resources.env = jax.experimental.maps.ResourceEnv(jax.experimental.maps.mesh(devices, ("dp", "mp")))
+maps.thread_resources.env = maps.ResourceEnv(maps.Mesh(devices, ("dp", "mp")))
 
 tokenizer = transformers.GPT2TokenizerFast.from_pretrained("gpt2")
 
