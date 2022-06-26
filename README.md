@@ -19,12 +19,17 @@ import requests
 question_on_insurance = "How many people own a Saab?"
 payload = {
     "context": question_on_insurance,
-    "token_max_length": 512,
+    "token_max_length": 340,
     "temperature": 0.90,
     "top_p": 0.95,
 }
 response = requests.post("http://localhost:5000/generate", params=payload).json()
-print(response)
+response  = response['text']
+before, sep, after = output.partition('SELECT')
+query = sep + after
+query = find_between(query, "SELECT", "###")
+query = "SELECT" + query
+print("Query: " + query + '\n')
 ```
 
 ## Deployment of the API server

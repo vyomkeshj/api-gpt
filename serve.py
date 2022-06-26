@@ -103,7 +103,7 @@ async def generate(
         question: Optional[
             str
         ] = "",
-        token_max_length: Optional[int] = 512,
+        token_max_length: Optional[int] = 330,
         temperature: Optional[float] = 0.90,
         top_p: Optional[float] = 0.95,
         stop_sequence: Optional[str] = None,
