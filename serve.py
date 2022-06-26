@@ -97,22 +97,6 @@ schema = """ insurance_data:[
   ]
 """
 
-kwargs = {'min_length': 0,
-          'max_length': None,
-          'length_no_input': True,
-          'remove_input': True,
-          'top_p': 0.95,
-          'temperature': 0.90,
-          'top_k': 50,
-          'repetition_penalty': 1.5,
-          'length_penalty': 1.2,
-          'do_sample': True,
-          'early_stopping': True,
-          'num_beams': 5,
-          'no_repeat_ngram_size': 0,
-          'num_return_sequences': 1,
-          'remove_end_sequence': True}
-
 context_initial = f"{header} {schema}"
 @app.post("/generate")
 async def generate(
@@ -120,8 +104,8 @@ async def generate(
             str
         ] = "",
         token_max_length: Optional[int] = 512,
-        temperature: Optional[float] = 1.0,
-        top_p: Optional[float] = 0.9,
+        temperature: Optional[float] = 0.90,
+        top_p: Optional[float] = 0.95,
         stop_sequence: Optional[str] = None,
 ):
     start = time.time()
@@ -141,7 +125,10 @@ async def generate(
         batched_tokens,
         length,
         token_max_length,
-        **kwargs,
+        {
+            "top_p": np.ones(total_batch) * top_p,
+            "temp": np.ones(total_batch) * temperature,
+        },
     )
 
     text = tokenizer.decode(output[1][0][0, :, 0])
