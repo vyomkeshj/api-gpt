@@ -110,6 +110,7 @@ async def generate(
 ):
     start = time.time()
     input = f"{context_initial} Question: {question} SQL: "
+    print(input)
 
     tokens = tokenizer.encode(input)
     provided_ctx = len(tokens)
@@ -147,7 +148,6 @@ async def generate(
     response["top_p"] = top_p
     response["stop_sequence"] = stop_sequence
 
-    print(response)
     return response
 
 
