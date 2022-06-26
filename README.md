@@ -60,13 +60,10 @@ network.state = read_ckpt(network.state, "./step_201/", devices.shape[1])
 
 And just run
 ```
-python3 serve.py
+python3 serve.py>log.txt
 ```
 
-Then, you can go to http://localhost:5000/docs and use the API!
-
-## Deploy the streamlit dashboard
-
+To test the model:
 ```
-python3 -m streamlit run streamlit_app.py --server.port 8000
+python3 run_query.py --question="how many people drive a saab?"
 ```
