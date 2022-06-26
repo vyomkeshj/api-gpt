@@ -16,12 +16,12 @@ Click on each to see the parameters!
 
 ```python
 import requests
-context = "How many people own a Saab?"
+question_on_insurance = "How many people own a Saab?"
 payload = {
-    "context": context,
+    "context": question_on_insurance,
     "token_max_length": 512,
-    "temperature": 1.0,
-    "top_p": 0.9,
+    "temperature": 0.90,
+    "top_p": 0.95,
 }
 response = requests.post("http://localhost:5000/generate", params=payload).json()
 print(response)
