@@ -100,9 +100,7 @@ schema = """ insurance_data:[
 context_initial = f"{header} {schema}"
 @app.post("/generate")
 async def generate(
-        question: Optional[
-            str
-        ] = "",
+        question: str,
         token_max_length: Optional[int] = 330,
         temperature: Optional[float] = 0.90,
         top_p: Optional[float] = 0.95,
