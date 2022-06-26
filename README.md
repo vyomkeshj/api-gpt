@@ -1,5 +1,3 @@
-# gpt-j-api 🦜
-
 * Streamlit web app at 0.0.0.0:8000/ 
 * The proper API, documented at 0.0.0.0:5000/docs
 
@@ -8,13 +6,9 @@
 These are the endpoints of the public API and require no authentication.
 Click on each to see the parameters!
 
-#### GPT-J text generation 🤖
+#### Model testing
 
 * [generate](docs/generate.md) : `POST /generate/`
-
-#### Zero-shot text classification (multilingual) 🌍
-
-* [classify](docs/classify.md) : `POST /classify/`
 
 ## Using the API 🔥
 
@@ -57,13 +51,15 @@ curl -X 'POST' \
 
 Just SSH into a TPU VM. This code was tested on both the v2-8 and v3-8 variants.
 
-First, install the requirements and get the weights:
+Activate the conda environment, then dowload weights:
 ```
-python3 -m pip install -r requirements.txt
-wget https://the-eye.eu/public/AI/GPT-J-6B/step_383500_slim.tar.zstd
-sudo apt install zstd
-tar -I zstd -xf step_383500_slim.tar.zstd
-rm step_383500_slim.tar.zstd
+conda activate ml_exp
+gsutil cp -r gs://gpt-j-trainer-sql/sql_combined_slim_f16/step_201 ./
+```
+
+Change `serve.py` with the downloaded slim model path
+```
+network.state = read_ckpt(network.state, "./step_201/", devices.shape[1])
 ```
 
 And just run
@@ -74,8 +70,6 @@ python3 serve.py
 Then, you can go to http://localhost:5000/docs and use the API!
 
 ## Deploy the streamlit dashboard
-
-Just run
 
 ```
 python3 -m streamlit run streamlit_app.py --server.port 8000
