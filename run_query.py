@@ -25,7 +25,9 @@ if __name__ == "__main__":
     question_on_insurance = args.question
     for p in np.linspace(0.70, 1.0, 10):
         for t in np.linspace(0.2, 0.9, 10):
-            print(f"{t} \n")
+            print(f"temp : {t} \n")
+            print(f"top p : {p} \n")
+
             payload = {
                 "question": question_on_insurance,
                 "token_max_length": 340,
