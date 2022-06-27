@@ -23,19 +23,18 @@ if __name__ == "__main__":
     args = parse_args()
 
     question_on_insurance = args.question
-    for i in np.linspace(0.2, 1.3, 30):
-        print(f"{i} \n")
-        payload = {
-            "question": question_on_insurance,
-            "token_max_length": 340,
-            "temperature": i,
-            "top_p": 0.95,
-        }
+    print(f"{i} \n")
+    payload = {
+        "question": question_on_insurance,
+        "token_max_length": 340,
+        "temperature": 0.655172,
+        "top_p": 0.95,
+    }
 
-        response = requests.post("http://localhost:5000/generate", params=payload).json()
-        response = response['text']
-        before, sep, after = response.partition('SELECT')
-        query = sep + after
-        query = find_between(query, "SELECT", "###")
-        query = "SELECT" + query
-        print("Query: " + query + '\n')
+    response = requests.post("http://localhost:5000/generate", params=payload).json()
+    response = response['text']
+    before, sep, after = response.partition('SELECT')
+    query = sep + after
+    query = find_between(query, "SELECT", "###")
+    query = "SELECT" + query
+    print("Query: " + query + '\n')
