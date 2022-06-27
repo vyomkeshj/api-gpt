@@ -33,10 +33,10 @@ if __name__ == "__main__":
             "num_beams": 5
         }
 
-    response = requests.post("http://localhost:5000/generate", params=payload).json()
-    response = response['text']
-    before, sep, after = response.partition('SELECT')
-    query = sep + after
-    query = find_between(query, "SELECT", "###")
-    query = "SELECT" + query
-    print("Query: " + query + '\n')
+        response = requests.post("http://localhost:5000/generate", params=payload).json()
+        response = response['text']
+        before, sep, after = response.partition('SELECT')
+        query = sep + after
+        query = find_between(query, "SELECT", "###")
+        query = "SELECT" + query
+        print("Query: " + query + '\n')
