@@ -48,49 +48,8 @@ tokenizer = transformers.GPT2TokenizerFast.from_pretrained("gpt2")
 total_batch = per_replica_batch * jax.device_count() // cores_per_replica
 
 
-header = """Take the database columns in the [Schema Json] section, question in [Question] section and generate SQL for the question on the schema."""
-schema = """ insurance_data:[
-  months_as_customer,
-  age,
-  policy_number,
-  policy_bind_date,
-  policy_state,
-  policy_csl,
-  policy_deductable,
-  policy_annual_premium,
-  umbrella_limit,
-  insured_zip,
-  insured_sex,
-  insured_education_level,
-  insured_occupation,
-  insured_hobbies,
-  insured_relationship,
-  capital_gains,
-  capital_loss,
-  incident_date,
-  incident_type,
-  collision_type,
-  incident_severity,
-  authorities_contacted,
-  incident_state,
-  incident_city,
-  incident_location,
-  incident_hour_of_the_day,
-  number_of_vehicles_involved,
-  property_damage,
-  bodily_injuries,
-  witnesses,
-  police_report_available,
-  total_claim_amount,
-  injury_claim,
-  property_claim,
-  vehicle_claim,
-  auto_make,
-  auto_model,
-  auto_year,
-  fraud_reported
-  ]
-"""
+header = """Generate corresponding SQL for the given question to work on the given [Schema]. [Schema]:"""
+schema = """{"insurance_data":["months_as_customer","age","policy_number","policy_bind_date","policy_state","policy_csl","policy_deductable","policy_annual_premium","umbrella_limit","insured_zip","insured_sex","insured_education_level","insured_occupation","insured_hobbies","insured_relationship","capital_gains","capital_loss","incident_date","incident_type","collision_type","incident_severity","authorities_contacted","incident_state","incident_city","incident_location","incident_hour_of_the_day","number_of_vehicles_involved","property_damage","bodily_injuries","witnesses","police_report_available","total_claim_amount","injury_claim","property_claim","vehicle_claim","auto_make","auto_model","auto_year","fraud_reported"]"""
 
 network = CausalTransformer(params)
 network.state = read_ckpt(network.state, "./step_201/", devices.shape[1])
