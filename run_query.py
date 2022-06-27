@@ -1,6 +1,6 @@
 import argparse
 import requests
-
+import numpy as np
 
 def parse_args():
     # Parse command line arguments
