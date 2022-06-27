@@ -61,7 +61,6 @@ context_initial = f"{header} {schema}"
 async def generate(
         question: str,
         token_max_length: Optional[int] = 330,
-        num_beams: Optional[int] = 5,
         temperature: Optional[float] = 0.90,
         top_p: Optional[float] = 0.95,
         stop_sequence: Optional[str] = None,
@@ -87,7 +86,6 @@ async def generate(
         {
             "top_p": np.ones(total_batch) * top_p,
             "temp": np.ones(total_batch) * temperature,
-            "num_beams": np.ones(total_batch) * num_beams,
         },
     )
 

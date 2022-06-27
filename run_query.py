@@ -30,7 +30,6 @@ if __name__ == "__main__":
             "token_max_length": 340,
             "temperature": i,
             "top_p": 0.95,
-            "num_beams": 5
         }
 
         response = requests.post("http://localhost:5000/generate", params=payload).json()
