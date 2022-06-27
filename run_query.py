@@ -23,12 +23,12 @@ if __name__ == "__main__":
     args = parse_args()
 
     question_on_insurance = args.question
-    for i in np.linspace(0.6, 1.8, 20):
+    for i in np.linspace(0.6, 1.3, 20):
         print(f"{i} \n")
         payload = {
             "question": question_on_insurance,
             "token_max_length": 340,
-            "temperature": 0.90,
+            "temperature": i,
             "top_p": 0.95,
             "num_beams": 5
         }
