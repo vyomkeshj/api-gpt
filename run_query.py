@@ -28,18 +28,18 @@ if __name__ == "__main__":
     #     for t in np.linspace(0.2, 0.9, 10):
     #         print(f"temp : {t} \n")
     #         print(f"top p : {p} \n")
+    for p in np.linspace(0.70, 1.0, 10):
+        payload = {
+            "question": question_on_insurance,
+            "token_max_length": 340,
+            "temperature": 0.70,
+            "top_p": 0.744,
+        }
 
-    payload = {
-        "question": question_on_insurance,
-        "token_max_length": 340,
-        "temperature": 0.70,
-        "top_p": 0.744,
-    }
-
-    response = requests.post("http://localhost:5000/generate", params=payload).json()
-    response = response['text']
-    before, sep, after = response.partition('SELECT')
-    query = sep + after
-    query = find_between(query, "SELECT", "###")
-    query = "SELECT" + query
-    print("Query: " + query + '\n')
+        response = requests.post("http://localhost:5000/generate", params=payload).json()
+        response = response['text']
+        before, sep, after = response.partition('SELECT')
+        query = sep + after
+        query = find_between(query, "SELECT", "###")
+        query = "SELECT" + query
+        print("Query: " + query + '\n')
