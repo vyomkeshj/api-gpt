@@ -32,8 +32,8 @@ if __name__ == "__main__":
     payload = {
         "question": question_on_insurance,
         "token_max_length": 340,
-        "temperature": 0.744,
-        "top_p": 0.7,
+        "temperature": 0.70,
+        "top_p": 0.744,
     }
 
     response = requests.post("http://localhost:5000/generate", params=payload).json()
