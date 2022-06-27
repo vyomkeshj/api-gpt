@@ -15,6 +15,8 @@ import uvicorn
 
 from typing import Optional
 
+np.random.seed(0)
+
 app = FastAPI()
 params = {
     "layers": 28,
