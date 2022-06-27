@@ -23,7 +23,7 @@ if __name__ == "__main__":
     args = parse_args()
 
     question_on_insurance = args.question
-    for i in np.linspace(0.6, 1.3, 20):
+    for i in np.linspace(0.2, 1.3, 30):
         print(f"{i} \n")
         payload = {
             "question": question_on_insurance,
