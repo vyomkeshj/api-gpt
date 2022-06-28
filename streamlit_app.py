@@ -108,23 +108,12 @@ def main():
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
 
-            my_dict = {'Query': question_on_insurance, 'Response': model_output, 'Correct': str(successful_run)}
+            my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}""", 'Correct': f"""str(successful_run)"""s}
             history = history.append(my_dict, ignore_index=True)
             history.to_csv(HIST_CSV_FILE, index=False)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
-
-        def on_click_good():
-            response["rate"] = "good"
-            print(response)
-
-        def on_click_bad():
-            response["rate"] = "bad"
-            print(response)
-
-        col1.form_submit_button("👍", on_click=on_click_good)
-        col2.form_submit_button("👎", on_click=on_click_bad)
 
     st.text("V0.0.2")
 
