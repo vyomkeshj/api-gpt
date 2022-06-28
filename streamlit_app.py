@@ -29,92 +29,92 @@ def main():
     #     print("hist read failed")
 
 
-query = conn.execute("SELECT * From insurance_data")
-cols = [column[0] for column in query.description]
-insurance_table = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
+    query = conn.execute("SELECT * From insurance_data")
+    cols = [column[0] for column in query.description]
+    insurance_table = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
 
-st.set_page_config(  # Alternate names: setup_page, page, layout
-    layout="wide",  # Can be "centered" or "wide". In the future also "dashboard", etc.
-    initial_sidebar_state="auto",  # Can be "auto", "expanded", "collapsed"
-    page_title="Q. Research Edition",  # String or None. Strings get appended with "• Streamlit".
-    page_icon=None,  # String, anything supported by st.image, or None.
-)
-hide_menu_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_menu_style, unsafe_allow_html=True)
+    st.set_page_config(  # Alternate names: setup_page, page, layout
+        layout="wide",  # Can be "centered" or "wide". In the future also "dashboard", etc.
+        initial_sidebar_state="auto",  # Can be "auto", "expanded", "collapsed"
+        page_title="Q. Research Edition",  # String or None. Strings get appended with "• Streamlit".
+        page_icon=None,  # String, anything supported by st.image, or None.
+    )
+    hide_menu_style = """
+                <style>
+                #MainMenu {visibility: hidden;}
+                footer {visibility: hidden;}
+                </style>
+                """
+    st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.title("Q. Research Edition")
+    st.title("Q. Research Edition")
 
-question_col, data_col = st.columns((1, 1))
-question_col.header("...")
-data_col.header("Insurance Data")
-data_col.dataframe(data=insurance_table, width=None, height=None)
-data_col.header("Query History")
-data_col.dataframe(data=history, width=None, height=None)
+    question_col, data_col = st.columns((1, 1))
+    question_col.header("...")
+    data_col.header("Insurance Data")
+    data_col.dataframe(data=insurance_table, width=None, height=None)
+    data_col.header("Query History")
+    data_col.dataframe(data=history, width=None, height=None)
 
-example = """What is the highest policy annual premium?"""
-question_on_insurance = question_col.text_area(
-    "Ask your question!", example, max_chars=2000, height=150
-)
-# temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
+    example = """What is the highest policy annual premium?"""
+    question_on_insurance = question_col.text_area(
+        "Ask your question!", example, max_chars=2000, height=150
+    )
+    # temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
 
-response = None
-with question_col.form(key="inputs"):
-    submit_button = st.form_submit_button(label="Ask Q!")
-    successful_run = False
-    if submit_button:
-        try_count = 3
-        payload = {
-            "header": header,
-            "schema": schema,
-            "question": question_on_insurance,
-            "token_max_length": 300,
-            "stop_sequence": "\n###",
-            "temperature": 0.05,
-            "top_p": 1.0,
-        }
+    response = None
+    with question_col.form(key="inputs"):
+        submit_button = st.form_submit_button(label="Ask Q!")
+        successful_run = False
+        if submit_button:
+            try_count = 3
+            payload = {
+                "header": header,
+                "schema": schema,
+                "question": question_on_insurance,
+                "token_max_length": 300,
+                "stop_sequence": "\n###",
+                "temperature": 0.05,
+                "top_p": 1.0,
+            }
 
-        while try_count > 0:
-            query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
-            response = query.json()
-            model_output = response["query"]
-            try:
-                ## todo: do something to manage dialects
-                model_output = model_output.replace("average(", "AVG(")
+            while try_count > 0:
+                query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
+                response = query.json()
+                model_output = response["query"]
+                try:
+                    ## todo: do something to manage dialects
+                    model_output = model_output.replace("average(", "AVG(")
 
-                print(model_output)
-                result = pd.read_sql(model_output, conn)
-                # Save to history
-                my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}"""}
+                    print(model_output)
+                    result = pd.read_sql(model_output, conn)
+                    # Save to history
+                    my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}"""}
 
-                history = history.append(my_dict, ignore_index=True)
+                    history = history.append(my_dict, ignore_index=True)
 
-                # print(result.head(5))
+                    # print(result.head(5))
 
-                question_col.dataframe(data=result, width=None, height=None)
-                # AgGrid(result)
-                question_col.text(f"raw_output: {model_output}")
+                    question_col.dataframe(data=result, width=None, height=None)
+                    # AgGrid(result)
+                    question_col.text(f"raw_output: {model_output}")
 
-                try_count = 0
-                successful_run = True
-            except Exception as e:
-                print(f"failed to execute {e}")
-                try_count -= 1
-        if not successful_run:
-            question_col.markdown("Please try again with a slightly tweaked question? :)", unsafe_allow_html=True)
-        else:
-            question_col.text(f"Query done in {response['compute_time']:.3} s.")
+                    try_count = 0
+                    successful_run = True
+                except Exception as e:
+                    print(f"failed to execute {e}")
+                    try_count -= 1
+            if not successful_run:
+                question_col.markdown("Please try again with a slightly tweaked question? :)", unsafe_allow_html=True)
+            else:
+                question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
-history.to_csv(HIST_CSV_FILE, index=False)
+    history.to_csv(HIST_CSV_FILE, index=False)
 
-if False:
-    col1, col2, *rest = st.columns([1, 1, 10, 10])
+    if False:
+        col1, col2, *rest = st.columns([1, 1, 10, 10])
 
-st.text("V0.0.2")
+    st.text("V0.0.2")
 
 if __name__ == "__main__":
     main()
