@@ -111,7 +111,7 @@ async def generate(
     response = {}
     response["model"] = "gpt-sql"
     response["compute_time"] = time.time() - start
-    response["text"] = "SELECT " + text
+    response["text"] = "SELECT" + text
     response["prompt"] = question
     response["token_max_length"] = token_max_length
     response["temperature"] = temperature

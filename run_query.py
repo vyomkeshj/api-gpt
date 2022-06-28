@@ -31,11 +31,6 @@ if __name__ == "__main__":
         "top_p": 0.95,
     }
 
-    response = requests.post("http://localhost:5000/generate", params=payload).json()
+    response = requests.post("http://localhost:5000/run_query", params=payload).json()
     response = response['text']
     print(response)
-    before, sep, after = response.partition('SELECT')
-    query = sep + after
-    query = find_between(query, "SELECT", "###")
-    query = "SELECT" + query
-    print("Query: " + query + '\n')
