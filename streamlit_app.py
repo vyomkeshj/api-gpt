@@ -20,12 +20,12 @@ except:
 
 HIST_CSV_FILE = './history.csv'
 
-
 def main():
     history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
     try:
-        history = pd.read_csv(HIST_CSV_FILE)
+        history = pd.read_csv(HIST_CSV_FILE, header=None)
     except:
+        history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
         history.to_csv(HIST_CSV_FILE)
 
     query = conn.execute("SELECT * From insurance_data")
@@ -95,7 +95,6 @@ def main():
                     # question_col.dataframe(data=result, width=None, height=None)
                     AgGrid(result)
 
-                    history.to_csv(HIST_CSV_FILE)
 
                     try_count = 0
                     successful_run = True
@@ -106,7 +105,8 @@ def main():
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
-            history.loc[len(history.index)] = [question_on_insurance, model_output, str(successful_run)]
+            history.loc[len(history)] = [question_on_insurance, model_output, str(successful_run)]
+            history.to_csv(HIST_CSV_FILE)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
