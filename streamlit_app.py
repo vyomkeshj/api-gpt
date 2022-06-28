@@ -4,16 +4,17 @@ import requests
 import pandas as pd
 import sqlite3
 
+DATA_CSV_FILE = './gistfile1.txt'
+data = pd.read_csv(DATA_CSV_FILE, sep=';')
+data.name = 'insurance_data'
+conn = sqlite3.connect("insurance.db")
+try:
+    data.to_sql('insurance_data', conn)
+except:
+    print("loaded old table!")
+
 
 def main():
-    DATA_CSV_FILE = './gistfile1.txt'
-    data = pd.read_csv(DATA_CSV_FILE, sep=';')
-    data.name = 'insurance_data'
-    conn = sqlite3.connect("insurance.db")
-    try:
-        data.to_sql('insurance_data', conn)
-    except:
-        print("loaded old table!")
 
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
@@ -25,6 +26,13 @@ def main():
         page_title="Q. Research Edition",  # String or None. Strings get appended with "• Streamlit".
         page_icon=None,  # String, anything supported by st.image, or None.
     )
+    hide_menu_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_menu_style, unsafe_allow_html=True)
+
     st.title("Q. Research Edition")
 
     question_col, data_col = st.beta_columns((1, 1))
@@ -66,7 +74,7 @@ def main():
             else:
                 st.text(f"Query done in {response['compute_time']:.3} s.")
 
-    data_col.header("Data")
+    data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
 
     if False:
