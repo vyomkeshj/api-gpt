@@ -49,7 +49,7 @@ def main():
                 "top_p": 1.0,
             }
 
-            while try_count > 0
+            while try_count > 0:
                 query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
                 response = query.json()
                 try:
