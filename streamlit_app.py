@@ -6,6 +6,18 @@ import sqlite3
 
 
 def main():
+    DATA_CSV_FILE = './gistfile1.txt'
+    data = pd.read_csv(DATA_CSV_FILE, sep=';')
+    data.name = 'insurance_data'
+    conn = sqlite3.connect("insurance.db")
+    try:
+        data.to_sql('insurance_data', conn)
+    except:
+        print("loaded old table!")
+
+    query = conn.execute("SELECT * From insurance_data")
+    cols = [column[0] for column in query.description]
+
     st.set_page_config(  # Alternate names: setup_page, page, layout
         layout="wide",  # Can be "centered" or "wide". In the future also "dashboard", etc.
         initial_sidebar_state="auto",  # Can be "auto", "expanded", "collapsed"
@@ -13,39 +25,23 @@ def main():
         page_icon=None,  # String, anything supported by st.image, or None.
     )
 
+    question_col, data_col = st.columns((1, 1))
     st.title("Q. Research Edition")
-    try:
-        DATA_CSV_FILE = './gistfile1.txt'
-        data = pd.read_csv(DATA_CSV_FILE, sep=';')
-        data.name = 'insurance_data'
-        conn = sqlite3.connect("insurance.db")
-        data.to_sql('insurance_data', conn)
-        query = conn.execute("SELECT * From insurance_claims")
-        cols = [column[0] for column in query.description]
-        results = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
-        st.dataframe(data=results, width=200, height=100)
-    except:
-        print("error reading data")
+    question_col.header("...")
 
-
-    example="""How many people have claims for every auto model?"""
-
+    example = """How many people have claims for each auto model?"""
     question_on_insurance = st.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-
     temp = st.slider(
-        "Increase the randomness if the default output is not right",
-        0.18,
-        0.6,
-        0.9,
-    )
+        "Increase the randomness if the default output is not right", 0.0, 0.18, 0.3)
 
     response = None
     with st.form(key="inputs"):
-        submit_button = st.form_submit_button(label="Run Query!")
-
+        submit_button = st.form_submit_button(label="Ask Q!")
+        successful_run = False
         if submit_button:
+            try_count = 5
             payload = {
                 "question": question_on_insurance,
                 "token_max_length": 350,
@@ -53,16 +49,25 @@ def main():
                 "top_p": 1.0,
             }
 
-            query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
-            response = query.json()
-            try:
-                st.markdown(response["prompt"])
-                st.markdown(response["query"])
-                st.markdown(response["html"], unsafe_allow_html=True)
-            except:
+            while try_count > 0
+                query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
+                response = query.json()
+                try:
+                    st.markdown(response["prompt"])
+                    result = pd.read_sql(f"SELECT {model_output}", conn)
+                    st.dataframe(data=result, width=200, height=100)
+                    try_count = 0
+                    successful_run = True
+                except:
+                    try_count -= 1
+            if not successful_run:
                 st.markdown(response["Please try again with a slightly different question? :)"], unsafe_allow_html=True)
+            else:
+                st.text(f"Query done in {response['compute_time']:.3} s.")
 
-            st.text(f"Query done in {response['compute_time']:.3} s.")
+    data_col.header("Data")
+    insurance_table = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
+    st.dataframe(data=insurance_table, width=200, height=100)
 
     if False:
         col1, col2, *rest = st.beta_columns([1, 1, 10, 10])
@@ -79,5 +84,7 @@ def main():
         col2.form_submit_button("👎", on_click=on_click_bad)
 
     st.text("V0.0.2")
+
+
 if __name__ == "__main__":
     main()

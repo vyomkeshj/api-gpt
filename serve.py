@@ -21,12 +21,12 @@ np.random.seed(0)
 
 app = FastAPI()
 
-# DATA_CSV_FILE = './gistfile1.txt'
-# data = pd.read_csv(DATA_CSV_FILE, sep=';')
-data.name = 'insurance_data'
-conn = sqlite3.connect("insurance.db")  # if the db does not exist, this creates a Any_Database_Name.db file in the current directory
-# store your table in the database:
-data.to_sql('insurance_data', conn)
+# # DATA_CSV_FILE = './gistfile1.txt'
+# # data = pd.read_csv(DATA_CSV_FILE, sep=';')
+# data.name = 'insurance_data'
+# conn = sqlite3.connect("insurance.db")  # if the db does not exist, this creates a Any_Database_Name.db file in the current directory
+# # store your table in the database:
+# data.to_sql('insurance_data', conn)
 
 params = {
     "layers": 28,
@@ -145,34 +145,23 @@ async def generate(
 
     response = {}
 
-    while try_count > 0:
-        output = network.generate(
-            batched_tokens,
-            length,
-            token_max_length,
-            {
-                "top_p": np.ones(total_batch) * top_p,
-                "temp": np.ones(total_batch) * temperature,
-            },
-        )
+    output = network.generate(
+        batched_tokens,
+        length,
+        token_max_length,
+        {
+            "top_p": np.ones(total_batch) * top_p,
+            "temp": np.ones(total_batch) * temperature,
+        },
+    )
 
-        model_output = tokenizer.decode(output[1][0][0, :, 0])
+    model_output = tokenizer.decode(output[1][0][0, :, 0])
 
-        # A simple technique to stop at stop_sequence without modifying the underlying model
-        if stop_sequence is not None and stop_sequence in model_output:
-            model_output = model_output.split(stop_sequence)[0]
+    # A simple technique to stop at stop_sequence without modifying the underlying model
+    if stop_sequence is not None and stop_sequence in model_output:
+        model_output = model_output.split(stop_sequence)[0]
 
-        try:
-            print(f"SELECT {model_output}")
-            response["query"] = f"SELECT {model_output}"
-
-            result = pd.read_sql(f"SELECT {model_output}", conn)
-
-            try_count = 0
-            response["html"] = result.to_html()
-        except:
-            try_count -= 1
-            print("Failed to execute query")
+    response["query"] = f"SELECT {model_output}"
 
     response["model"] = "gpt-sql"
     response["compute_time"] = time.time() - start
