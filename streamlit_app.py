@@ -88,7 +88,7 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    df.loc[len(df.index)] = [question_on_insurance, model_output]
+                    history.loc[len(history.index)] = [question_on_insurance, model_output]
 
                     # print(result.head(5))
 
