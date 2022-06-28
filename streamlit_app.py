@@ -6,7 +6,7 @@ import sqlite3
 from st_aggrid import AgGrid
 from datetime import datetime
 
-header = """###Postgres SQL tables, with their properties:"""
+header = """###SQLite SQL tables, with their properties:"""
 schema = """#Insurance_Data(months_as_customer,age,policy_number,policy_bind_date,policy_state,policy_csl,policy_deductable,policy_annual_premium,umbrella_limit,insured_zip,insured_sex,insured_education_level,insured_occupation,insured_hobbies,insured_relationship,capital_gains,capital_loss,incident_date,incident_type,collision_type,incident_severity,authorities_contacted,incident_state,incident_city,incident_location,incident_hour_of_the_day,number_of_vehicles_involved,property_damage,bodily_injuries,witnesses,police_report_available,total_claim_amount,injury_claim,property_claim,vehicle_claim,auto_make,auto_model,auto_year,fraud_reported)"""
 
 DATA_CSV_FILE = './gistfile1.txt'
@@ -67,6 +67,8 @@ def main():
             try_count = 5
 
             payload = {
+                "header": header,
+                "schema": schema,
                 "question": question_on_insurance,
                 "token_max_length": 350,
                 "temperature": temperature_val,
