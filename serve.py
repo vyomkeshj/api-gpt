@@ -161,7 +161,7 @@ async def generate(
     if stop_sequence is not None and stop_sequence in model_output:
         model_output = model_output.split(stop_sequence)[0]
 
-    response["query"] = f"SELECT {model_output}"
+    response["query"] = f"SELECT{model_output}"
 
     response["model"] = "gpt-sql"
     response["compute_time"] = time.time() - start

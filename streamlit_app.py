@@ -47,7 +47,6 @@ def main():
         "Ask your question!", example, max_chars=2000, height=150
     )
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.3)
-    top_p_val = question_col.slider("Increase the randomness", 1.0, 0.95, 0.85)
 
     response = None
     with question_col.form(key="inputs"):
@@ -59,7 +58,7 @@ def main():
                 "question": question_on_insurance,
                 "token_max_length": 350,
                 "temperature": temperature_val,
-                "top_p": top_p_val,
+                "top_p": 1.0,
             }
 
             while try_count > 0:
