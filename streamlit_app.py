@@ -19,10 +19,9 @@ def main():
 
     temp = st.slider(
         "Increase the randomness if the default output is not right",
-        0.0,
-        1.5,
-        1.0 if rec < 2 else 0.35,
-        0.05,
+        0.18,
+        0.6,
+        0.9,
     )
 
     response = None
