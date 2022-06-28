@@ -17,6 +17,7 @@ def main():
 
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
+    insurance_table = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
 
     st.set_page_config(  # Alternate names: setup_page, page, layout
         layout="wide",  # Can be "centered" or "wide". In the future also "dashboard", etc.
@@ -25,7 +26,7 @@ def main():
         page_icon=None,  # String, anything supported by st.image, or None.
     )
 
-    question_col, data_col = st.columns((1, 1))
+    question_col, data_col = st.beta_columns((1, 1))
     st.title("Q. Research Edition")
     question_col.header("...")
 
@@ -66,7 +67,6 @@ def main():
                 st.text(f"Query done in {response['compute_time']:.3} s.")
 
     data_col.header("Data")
-    insurance_table = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
     st.dataframe(data=insurance_table, width=200, height=100)
 
     if False:
