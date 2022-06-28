@@ -7,7 +7,7 @@ from st_aggrid import AgGrid
 from datetime import datetime
 
 header = """###SQLite SQL tables, with their properties:"""
-schema = """#Insurance_Data(months_as_customer,age,policy_number,policy_bind_date,policy_state,policy_csl,policy_deductable,policy_annual_premium,umbrella_limit,insured_zip,insured_sex,insured_education_level,insured_occupation,insured_hobbies,insured_relationship,capital_gains,capital_loss,incident_date,incident_type,collision_type,incident_severity,authorities_contacted,incident_state,incident_city,incident_location,incident_hour_of_the_day,number_of_vehicles_involved,property_damage,bodily_injuries,witnesses,police_report_available,total_claim_amount,injury_claim,property_claim,vehicle_claim,auto_make,auto_model,auto_year,fraud_reported)"""
+schema = """#Insurance_Data(months_as_customer, age, policy_number, policy_bind_date, policy_state, policy_csl, policy_deductable, policy_annual_premium, umbrella_limit, insured_zip, insured_sex, insured_education_level, insured_occupation, insured_hobbies, insured_relationship, capital_gains, capital_loss, incident_date, incident_type, collision_type, incident_severity, authorities_contacted, incident_state, incident_city, incident_location, incident_hour_of_the_day, number_of_vehicles_involved, property_damage, bodily_injuries, witnesses, police_report_available, total_claim_amount, injury_claim, property_claim, vehicle_claim, auto_make, auto_model, auto_year, fraud_reported)"""
 
 DATA_CSV_FILE = './gistfile1.txt'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
@@ -26,7 +26,7 @@ def main():
     try:
         history = pd.read_csv(HIST_CSV_FILE, index=False)
     except:
-        history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
+        history = pd.DataFrame(columns=['Query', 'Response'])
 
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
@@ -88,11 +88,10 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}""",
-                               'Correct': f"""{str(successful_run)}"""}
+                    my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}"""}
 
                     history = history.append(my_dict, ignore_index=True)
-                    history.to_csv(HIST_CSV_FILE, index=False)
+
 
                     # print(result.head(5))
 
@@ -110,6 +109,8 @@ def main():
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
+
+    history.to_csv(HIST_CSV_FILE, index=False)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
