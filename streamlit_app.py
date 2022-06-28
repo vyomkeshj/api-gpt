@@ -73,9 +73,9 @@ def main():
                 "header": header,
                 "schema": schema,
                 "question": question_on_insurance,
-                "token_max_length": 250,
-                "stop_sequence": f"\n###",
-                "temperature": 0.20,
+                "token_max_length": 300,
+                "stop_sequence": "\n###",
+                "temperature": 0,
                 "top_p": 1.0,
             }
 
