@@ -52,6 +52,7 @@ def main():
     question_col.header("...")
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
+    data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
     example = """Query to calculate the number of people over the age of 62 and above average capital gains?"""
