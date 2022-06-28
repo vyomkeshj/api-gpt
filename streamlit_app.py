@@ -82,7 +82,7 @@ def main():
                     model_output = response["query"]
                     print(model_output)
                     # Save to history
-                    history.concat([date_time, question_on_insurance, model_output])
+                    history = pd.concat([history, [date_time, question_on_insurance, model_output]], axis=1)
 
                     result = pd.read_sql(model_output, conn)
                     # print(result.head(5))
