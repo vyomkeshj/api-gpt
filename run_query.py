@@ -31,6 +31,6 @@ if __name__ == "__main__":
         "top_p": 0.95,
     }
 
-    response = requests.post("http://localhost:5000/run_query", params=payload).json()
+    response = requests.post("http://10.164.0.15:5000/run_query", params=payload).json()
     # response = response['query']
     print(response)
