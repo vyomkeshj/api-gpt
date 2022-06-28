@@ -31,7 +31,7 @@ def main():
         if submit_button:
             payload = {
                 "context": inp,
-                "token_max_length": length,
+                "token_max_length": 350,
                 "temperature": temp,
                 "top_p": 1.0,
             }
