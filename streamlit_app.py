@@ -80,6 +80,8 @@ def main():
                 response = query.json()
                 try:
                     model_output = response["query"]
+                    model_output = model_output.replace("average(", "AVG(")
+
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
