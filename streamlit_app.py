@@ -45,8 +45,9 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    temp = question_col.slider(
-        "Increase the randomness if the default output is not right", 0.0, 0.18, 0.3)
+    top_p, temp = question_col.columns(2)
+    temperature_val = temp.slider("Increase the randomness", 0.18, 0.3)
+    top_p_val = top_p.slider("Increase the randomness", 1.0, 0.95, 0.85)
 
     response = None
     with question_col.form(key="inputs"):
@@ -57,8 +58,8 @@ def main():
             payload = {
                 "question": question_on_insurance,
                 "token_max_length": 350,
-                "temperature": temp,
-                "top_p": 1.0,
+                "temperature": temperature_val,
+                "top_p": top_p_val,
             }
 
             while try_count > 0:
