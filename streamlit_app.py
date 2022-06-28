@@ -105,7 +105,9 @@ def main():
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
-            history.loc[len(history)] = [question_on_insurance, model_output, str(successful_run)]
+            new_hist = [question_on_insurance, model_output, str(successful_run)]
+            history = history.append(pd.Series(new_hist, index=df.columns[:len(new_hist)]), ignore_index=True)
+
             history.to_csv(HIST_CSV_FILE)
 
     if False:
