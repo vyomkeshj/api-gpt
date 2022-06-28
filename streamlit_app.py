@@ -20,6 +20,7 @@ except:
 
 HIST_CSV_FILE = './history.csv'
 
+
 def main():
     history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
     try:
@@ -67,14 +68,14 @@ def main():
         successful_run = False
         if submit_button:
             try_count = 5
-
+            loc_temp = temperature_val
             payload = {
                 "header": header,
                 "schema": schema,
                 "question": question_on_insurance,
                 "token_max_length": 350,
                 "stop_sequence": "\n###",
-                "temperature": temperature_val,
+                "temperature": loc_temp,
                 "top_p": 1.0,
             }
 
@@ -96,19 +97,19 @@ def main():
                     # AgGrid(result)
                     question_col.text(f"raw_output: {model_output}")
 
-
                     try_count = 0
                     successful_run = True
                 except Exception as e:
                     print(f"failed to execute {e}")
                     try_count -= 1
+                    loc_temp += 0.15
             if not successful_run:
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
-
-            my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}""", 'Correct': f"""str(successful_run)"""s}
+            my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}""",
+                       'Correct': f"""str(successful_run)"""s}
             history = history.append(my_dict, ignore_index=True)
             history.to_csv(HIST_CSV_FILE, index=False)
 
@@ -116,6 +117,7 @@ def main():
         col1, col2, *rest = st.columns([1, 1, 10, 10])
 
     st.text("V0.0.2")
+
 
 if __name__ == "__main__":
     main()
