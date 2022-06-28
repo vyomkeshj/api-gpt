@@ -25,9 +25,9 @@ def main():
         page_title="Q. Research Edition",  # String or None. Strings get appended with "• Streamlit".
         page_icon=None,  # String, anything supported by st.image, or None.
     )
+    st.title("Q. Research Edition")
 
     question_col, data_col = st.beta_columns((1, 1))
-    st.title("Q. Research Edition")
     question_col.header("...")
 
     example = """How many people have claims for each auto model?"""
