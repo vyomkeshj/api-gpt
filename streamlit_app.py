@@ -31,14 +31,14 @@ def main():
     question_col.header("...")
 
     example = """How many people have claims for each auto model?"""
-    question_on_insurance = st.text_area(
+    question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    temp = st.slider(
+    temp = question_col.slider(
         "Increase the randomness if the default output is not right", 0.0, 0.18, 0.3)
 
     response = None
-    with st.form(key="inputs"):
+    with question_col.form(key="inputs"):
         submit_button = st.form_submit_button(label="Ask Q!")
         successful_run = False
         if submit_button:
@@ -56,7 +56,7 @@ def main():
                 try:
                     st.markdown(response["prompt"])
                     result = pd.read_sql(f"SELECT {model_output}", conn)
-                    st.dataframe(data=result, width=200, height=100)
+                    question_col.dataframe(data=result, width=None, height=None)
                     try_count = 0
                     successful_run = True
                 except:
@@ -67,7 +67,7 @@ def main():
                 st.text(f"Query done in {response['compute_time']:.3} s.")
 
     data_col.header("Data")
-    st.dataframe(data=insurance_table, width=200, height=100)
+    data_col.dataframe(data=insurance_table, width=None, height=None)
 
     if False:
         col1, col2, *rest = st.beta_columns([1, 1, 10, 10])
