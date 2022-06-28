@@ -57,7 +57,7 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """Query to list the distinct insured hobbies and how many customers have them each??"""
+    example = """What is the highest policy annual premium?"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
