@@ -65,13 +65,16 @@ def main():
                 query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
                 response = query.json()
                 model_output = response["query"]
+                print(model_output)
                 try:
-                    result = pd.read_sql(f"SELECT {model_output}", conn)
+                    result = pd.read_sql(model_output, conn)
+                    print(result.head(5))
                     # question_col.dataframe(data=result, width=None, height=None)
                     AgGrid(result)
                     try_count = 0
                     successful_run = True
                 except:
+                    print("failed to execute")
                     try_count -= 1
             if not successful_run:
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
@@ -93,7 +96,6 @@ def main():
         col2.form_submit_button("👎", on_click=on_click_bad)
 
     st.text("V0.0.2")
-
 
 if __name__ == "__main__":
     main()
