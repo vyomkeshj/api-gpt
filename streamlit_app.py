@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 import sqlite3
 from st_aggrid import AgGrid
+from datetime import datetime
 
 DATA_CSV_FILE = './gistfile1.txt'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
@@ -14,6 +15,13 @@ try:
 except:
     print("loaded old table!")
 
+HIST_CSV_FILE = './history.csv'
+
+history = pd.DataFrame(columns=['Time', 'Query', 'Response'])
+try:
+    history = pd.read_csv(DATA_CSV_FILE)
+except:
+    history.to_csv(HIST_CSV_FILE)
 
 def main():
 
@@ -68,9 +76,16 @@ def main():
                     model_output = response["query"]
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
-                    print(result.head(5))
+                    # print(result.head(5))
+                    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+
                     # question_col.dataframe(data=result, width=None, height=None)
                     AgGrid(result)
+
+                    # Save to history
+                    history.concat([date_time, question_on_insurance, model_output])
+                    history.to_csv(HIST_CSV_FILE)
+
                     try_count = 0
                     successful_run = True
                 except:
@@ -80,6 +95,8 @@ def main():
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
+
+    data_col.dataframe(data=history, width=None, height=None)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
