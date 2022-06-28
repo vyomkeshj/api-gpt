@@ -165,9 +165,12 @@ async def generate(
 
         try:
             print(f"SELECT {text}")
+            response["query"] = f"SELECT {text}
+
             result = pd.read_sql(f"SELECT {text}", conn)
+
             try_count = 0
-            response["text"] = result.to_html()
+            response["html"] = result.to_html()
         except:
             try_count -= 1
             print("Failed to execute query")
