@@ -3,6 +3,7 @@ import time
 import requests
 import pandas as pd
 import sqlite3
+from st_aggrid import AgGrid
 
 DATA_CSV_FILE = './gistfile1.txt'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
@@ -68,7 +69,8 @@ def main():
                 model_output = response["query"]
                 try:
                     result = pd.read_sql(f"SELECT {model_output}", conn)
-                    question_col.dataframe(data=result, width=None, height=None)
+                    # question_col.dataframe(data=result, width=None, height=None)
+                    AgGrid(result)
                     try_count = 0
                     successful_run = True
                 except:
