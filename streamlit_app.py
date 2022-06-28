@@ -22,7 +22,7 @@ HIST_CSV_FILE = './history.csv'
 
 
 def main():
-    history = pd.DataFrame(columns=['Query', 'Response'])
+    history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
     try:
         history = pd.read_csv(HIST_CSV_FILE)
     except:
@@ -81,15 +81,14 @@ def main():
             while try_count > 0:
                 query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
                 response = query.json()
+                model_output = response["query"]
                 try:
-                    model_output = response["query"]
                     ## todo: do something to manage dialects
                     model_output = model_output.replace("average(", "AVG(")
 
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    history.loc[len(history.index)] = [question_on_insurance, model_output]
 
                     # print(result.head(5))
 
@@ -107,7 +106,7 @@ def main():
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
-
+            history.loc[len(history.index)] = [question_on_insurance, model_output, str(successful_run)]
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
