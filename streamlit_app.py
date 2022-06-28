@@ -52,6 +52,7 @@ def main():
     question_col.header("...")
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
+    data_col.dataframe(data=history, width=None, height=None)
 
     example = """Query to calculate the number of people over the age of 62 and above average capital gains?"""
     question_on_insurance = question_col.text_area(
@@ -86,15 +87,14 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
+                    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
                     history = pd.concat([history, [date_time, question_on_insurance, model_output]], axis=0)
 
                     # print(result.head(5))
-                    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
 
                     # question_col.dataframe(data=result, width=None, height=None)
                     AgGrid(result)
 
-                    data_col.dataframe(data=history, width=None, height=None)
                     history.to_csv(HIST_CSV_FILE)
 
                     try_count = 0
