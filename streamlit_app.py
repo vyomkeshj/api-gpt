@@ -60,7 +60,7 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    temperature_val = question_col.slider("Increase the randomness", 0.18, 0.3)
+    temperature_val = question_col.slider("Increase the randomness", 0.0, 0.3)
 
     response = None
     with question_col.form(key="inputs"):
@@ -73,7 +73,7 @@ def main():
                 "header": header,
                 "schema": schema,
                 "question": question_on_insurance,
-                "token_max_length": 350,
+                "token_max_length": 100,
                 "stop_sequence": "\n###",
                 "temperature": loc_temp,
                 "top_p": 1.0,
@@ -104,7 +104,7 @@ def main():
                 except Exception as e:
                     print(f"failed to execute {e}")
                     try_count -= 1
-                    loc_temp += 0.15
+                    loc_temp += 0.10
             if not successful_run:
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
