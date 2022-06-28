@@ -84,6 +84,7 @@ def main():
 
                     # Save to history
                     history.concat([date_time, question_on_insurance, model_output])
+                    data_col.dataframe(data=history, width=None, height=None)
                     history.to_csv(HIST_CSV_FILE)
 
                     try_count = 0
@@ -96,7 +97,6 @@ def main():
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
-    data_col.dataframe(data=history, width=None, height=None)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
