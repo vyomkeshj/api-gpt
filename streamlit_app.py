@@ -63,8 +63,8 @@ def main():
             while try_count > 0:
                 query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
                 response = query.json()
+                model_output = response["query"]
                 try:
-                    st.markdown(response["prompt"])
                     result = pd.read_sql(f"SELECT {model_output}", conn)
                     question_col.dataframe(data=result, width=None, height=None)
                     try_count = 0
@@ -72,7 +72,7 @@ def main():
                 except:
                     try_count -= 1
             if not successful_run:
-                question_col.markdown(response["Please try again with a slightly different question? :)"], unsafe_allow_html=True)
+                question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
