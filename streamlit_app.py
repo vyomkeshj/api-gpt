@@ -45,7 +45,7 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    top_p, temp = question_col.columns(2)
+    top_p, temp = question_col.beta_columns(2)
     temperature_val = temp.slider("Increase the randomness", 0.18, 0.3)
     top_p_val = top_p.slider("Increase the randomness", 1.0, 0.95, 0.85)
 
