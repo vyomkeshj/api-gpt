@@ -80,6 +80,7 @@ def main():
                 response = query.json()
                 try:
                     model_output = response["query"]
+                    ## todo: do something to manage dialects
                     model_output = model_output.replace("average(", "AVG(")
 
                     print(model_output)
