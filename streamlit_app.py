@@ -88,7 +88,7 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    history = pd.concat([history, [question_on_insurance, model_output]], axis=0)
+                    history = pd.concat([history, pd.DataFrame(columns=['Query', 'Response'], data=[question_on_insurance, model_output])], axis=0)
 
                     # print(result.head(5))
 
