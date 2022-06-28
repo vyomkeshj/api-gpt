@@ -32,5 +32,5 @@ if __name__ == "__main__":
     }
 
     response = requests.post("http://localhost:5000/run_query", params=payload).json()
-    response = response['query']
+    # response = response['query']
     print(response)
