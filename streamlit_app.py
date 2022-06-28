@@ -21,11 +21,11 @@ except:
 HIST_CSV_FILE = './history.csv'
 
 def main():
-    history = pd.DataFrame(columns=['Query', 'Response', 'Correct'], index=False)
+    history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
     try:
         history = pd.read_csv(HIST_CSV_FILE, header=None, index=False)
     except:
-        history = pd.DataFrame(columns=['Query', 'Response', 'Correct'], index=False)
+        history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
         history.to_csv(HIST_CSV_FILE, index=False)
 
     query = conn.execute("SELECT * From insurance_data")
