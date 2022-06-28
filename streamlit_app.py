@@ -11,9 +11,9 @@ def main():
         page_icon=None,  # String, anything supported by st.image, or None.
     )
     st.title("Query Insurance Dataset")
-    example="""Ask: "show me the data" to get a peek at the dataset"""
+    example="""Show me the data"""
 
-    inp = st.text_area(
+    question_on_insurance = st.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
 
@@ -30,7 +30,7 @@ def main():
 
         if submit_button:
             payload = {
-                "context": inp,
+                "question": question_on_insurance,
                 "token_max_length": 350,
                 "temperature": temp,
                 "top_p": 1.0,
@@ -38,7 +38,7 @@ def main():
 
             query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
             response = query.json()
-
+            print(response)
             st.markdown(response["prompt"])
             st.markdown(response["query"])
             st.markdown(response["html"], unsafe_allow_html=True)
