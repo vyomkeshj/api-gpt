@@ -11,7 +11,7 @@ def main():
         page_icon=None,  # String, anything supported by st.image, or None.
     )
     st.title("Query Insurance Dataset")
-    """Ask: "show me the data" to get a peek at the dataset"""
+    example="""Ask: "show me the data" to get a peek at the dataset"""
 
     inp = st.text_area(
         "Ask your question!", example, max_chars=2000, height=150
