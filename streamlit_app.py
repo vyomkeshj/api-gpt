@@ -75,7 +75,7 @@ def main():
                 "question": question_on_insurance,
                 "token_max_length": 300,
                 "stop_sequence": "\n###",
-                "temperature": 0,
+                "temperature": 0.05,
                 "top_p": 1.0,
             }
 
