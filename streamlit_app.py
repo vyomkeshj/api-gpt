@@ -60,7 +60,7 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    temperature_val = question_col.slider("Increase the randomness", 0.0, 0.3)
+    temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
 
     response = None
     with question_col.form(key="inputs"):
