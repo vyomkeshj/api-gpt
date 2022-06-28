@@ -88,7 +88,7 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+                    date_time = datetime.strftime("%m/%d/%Y, %H:%M:%S")
                     history = pd.concat([history, [date_time, question_on_insurance, model_output]], axis=0)
 
                     # print(result.head(5))
