@@ -37,6 +37,8 @@ def main():
 
     question_col, data_col = st.beta_columns((1, 1))
     question_col.header("...")
+    data_col.header("Insurance Data")
+    data_col.dataframe(data=insurance_table, width=None, height=None)
 
     example = """How many people have claims for each auto model?"""
     question_on_insurance = question_col.text_area(
@@ -70,12 +72,9 @@ def main():
                 except:
                     try_count -= 1
             if not successful_run:
-                st.markdown(response["Please try again with a slightly different question? :)"], unsafe_allow_html=True)
+                question_col.markdown(response["Please try again with a slightly different question? :)"], unsafe_allow_html=True)
             else:
-                st.text(f"Query done in {response['compute_time']:.3} s.")
-
-    data_col.header("Insurance Data")
-    data_col.dataframe(data=insurance_table, width=None, height=None)
+                question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
     if False:
         col1, col2, *rest = st.beta_columns([1, 1, 10, 10])
