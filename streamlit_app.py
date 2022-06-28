@@ -55,7 +55,7 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """Query to calculate the number of people over the age of 62 and above average capital gains?"""
+    example = """Query to list the distinct hobbies and how many customers have them each?"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
@@ -88,7 +88,7 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    history = pd.concat([history, pd.DataFrame(columns=['Query', 'Response'], data=[question_on_insurance, model_output])], axis=0)
+                    history = pd.concat([history, pd.DataFrame(data=[question_on_insurance, model_output])], axis=0)
 
                     # print(result.head(5))
 
