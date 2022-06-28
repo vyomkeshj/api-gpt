@@ -19,7 +19,7 @@ HIST_CSV_FILE = './history.csv'
 
 history = pd.DataFrame(columns=['Time', 'Query', 'Response'])
 try:
-    history = pd.read_csv(DATA_CSV_FILE)
+    history = pd.read_csv(HIST_CSV_FILE)
 except:
     history.to_csv(HIST_CSV_FILE)
 
