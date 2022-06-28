@@ -22,7 +22,7 @@ HIST_CSV_FILE = './history.csv'
 
 
 def main():
-    history = pd.DataFrame(columns=['Time', 'Query', 'Response'])
+    history = pd.DataFrame(columns=['Query', 'Response'])
     try:
         history = pd.read_csv(HIST_CSV_FILE)
     except:
@@ -88,8 +88,7 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    date_time = datetime.strftime("%m/%d/%Y, %H:%M:%S")
-                    history = pd.concat([history, [date_time, question_on_insurance, model_output]], axis=0)
+                    history = pd.concat([history, [question_on_insurance, model_output]], axis=0)
 
                     # print(result.head(5))
 
