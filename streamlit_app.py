@@ -56,7 +56,7 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """Query to list the distinct hobbies and how many customers have them each?"""
+    example = """Query to list the distinct insured hobbies and how many customers have them each??"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
@@ -90,6 +90,8 @@ def main():
                     print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
+                    history = history.append(my_dict, ignore_index=True)
+                    history.to_csv(HIST_CSV_FILE, index=False)
 
                     # print(result.head(5))
 
@@ -110,8 +112,6 @@ def main():
 
             my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}""",
                        'Correct': f"""str(successful_run)"""}
-            history = history.append(my_dict, ignore_index=True)
-            history.to_csv(HIST_CSV_FILE, index=False)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
