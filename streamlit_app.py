@@ -37,7 +37,7 @@ def main():
 
     st.title("Q. Research Edition")
 
-    question_col, data_col = st.beta_columns((1, 1))
+    question_col, data_col = st.columns((1, 1))
     question_col.header("...")
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
@@ -46,9 +46,8 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    top_p, temp = question_col.beta_columns(2)
-    temperature_val = temp.slider("Increase the randomness", 0.18, 0.3)
-    top_p_val = top_p.slider("Increase the randomness", 1.0, 0.95, 0.85)
+    temperature_val = question_col.slider("Increase the randomness", 0.18, 0.3)
+    top_p_val = question_col.slider("Increase the randomness", 1.0, 0.95, 0.85)
 
     response = None
     with question_col.form(key="inputs"):
@@ -81,7 +80,7 @@ def main():
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
     if False:
-        col1, col2, *rest = st.beta_columns([1, 1, 10, 10])
+        col1, col2, *rest = st.columns([1, 1, 10, 10])
 
         def on_click_good():
             response["rate"] = "good"
