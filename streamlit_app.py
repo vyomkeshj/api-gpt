@@ -22,7 +22,7 @@ HIST_CSV_FILE = './history.csv'
 
 
 def main():
-    history = pd.read_csv(HIST_CSV_FILE, index=False)
+    history = pd.read_csv(HIST_CSV_FILE)
     history.head()
     # except:
     #     history = pd.DataFrame(columns=['Query', 'Response'])
