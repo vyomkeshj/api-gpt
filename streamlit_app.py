@@ -73,6 +73,7 @@ def main():
                 "schema": schema,
                 "question": question_on_insurance,
                 "token_max_length": 350,
+                "stop_sequence": "###"
                 "temperature": temperature_val,
                 "top_p": 1.0,
             }
