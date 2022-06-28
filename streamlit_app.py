@@ -94,8 +94,8 @@ def main():
                     history = history.append(my_dict, ignore_index=True)
 
                     # print(result.head(5))
-                    data_col.header("Query History")
-                    data_col.dataframe(data=history, width=None, height=None)
+                    # data_col.header("Query History")
+                    # data_col.dataframe(data=history, width=None, height=None)
 
                     last_output = result
                     # AgGrid(result)
