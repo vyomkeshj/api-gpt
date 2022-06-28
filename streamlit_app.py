@@ -6,15 +6,6 @@ import sqlite3
 
 
 def main():
-    try:
-        DATA_CSV_FILE = './gistfile1.txt'
-        data = pd.read_csv(DATA_CSV_FILE, sep=';')
-        data.name = 'insurance_data'
-        conn = sqlite3.connect("insurance.db")
-        data.to_sql('insurance_data', conn)
-    except:
-        print("error reading data")
-
     st.set_page_config(  # Alternate names: setup_page, page, layout
         layout="wide",  # Can be "centered" or "wide". In the future also "dashboard", etc.
         initial_sidebar_state="auto",  # Can be "auto", "expanded", "collapsed"
@@ -23,11 +14,19 @@ def main():
     )
 
     st.title("Q. Research Edition")
+    try:
+        DATA_CSV_FILE = './gistfile1.txt'
+        data = pd.read_csv(DATA_CSV_FILE, sep=';')
+        data.name = 'insurance_data'
+        conn = sqlite3.connect("insurance.db")
+        data.to_sql('insurance_data', conn)
+        query = conn.execute("SELECT * From insurance_claims")
+        cols = [column[0] for column in query.description]
+        results = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
+        st.dataframe(data=results, width=200, height=100)
+    except:
+        print("error reading data")
 
-    query = conn.execute("SELECT * From insurance_claims")
-    cols = [column[0] for column in query.description]
-    results = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
-    st.dataframe(data=results, width=200, height=100)
 
     example="""How many people have claims for every auto model?"""
 
