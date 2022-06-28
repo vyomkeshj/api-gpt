@@ -28,6 +28,7 @@ def main():
     #     history = pd.DataFrame(columns=['Query', 'Response'])
     #     print("hist read failed")
 
+    last_output = pd.DataFrame(columns=["OUTPUT TABLE"])
 
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
@@ -56,7 +57,7 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """What is the highest policy annual premium?"""
+    example = """what are the top ten insured_relationship for people with the highest claim amount"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
@@ -96,7 +97,7 @@ def main():
                     data_col.header("Query History")
                     data_col.dataframe(data=history, width=None, height=None)
 
-                    question_col.dataframe(data=result, width=None, height=None)
+                    last_output = result
                     # AgGrid(result)
                     question_col.text(f"raw_output: {model_output}")
 
@@ -111,6 +112,7 @@ def main():
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
     history.to_csv(HIST_CSV_FILE, index=False)
+    question_col.dataframe(data=result, width=None, height=None)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
