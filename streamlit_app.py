@@ -81,10 +81,10 @@ def main():
                 try:
                     model_output = response["query"]
                     print(model_output)
+                    result = pd.read_sql(model_output, conn)
                     # Save to history
                     history = pd.concat([history, [date_time, question_on_insurance, model_output]], axis=1)
 
-                    result = pd.read_sql(model_output, conn)
                     # print(result.head(5))
                     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
 
