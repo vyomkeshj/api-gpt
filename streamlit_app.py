@@ -90,10 +90,11 @@ def main():
                     result = pd.read_sql(model_output, conn)
                     # Save to history
                     my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}"""}
-
                     history = history.append(my_dict, ignore_index=True)
 
                     # print(result.head(5))
+                    data_col.header("Query History")
+                    data_col.dataframe(data=history, width=None, height=None)
 
                     question_col.dataframe(data=result, width=None, height=None)
                     # AgGrid(result)
