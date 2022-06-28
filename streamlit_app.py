@@ -21,12 +21,12 @@ except:
 HIST_CSV_FILE = './history.csv'
 
 def main():
-    history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
+    history = pd.DataFrame(columns=['Query', 'Response', 'Correct'], index=False)
     try:
-        history = pd.read_csv(HIST_CSV_FILE, header=None)
+        history = pd.read_csv(HIST_CSV_FILE, header=None, index=False)
     except:
-        history = pd.DataFrame(columns=['Query', 'Response', 'Correct'])
-        history.to_csv(HIST_CSV_FILE)
+        history = pd.DataFrame(columns=['Query', 'Response', 'Correct'], index=False)
+        history.to_csv(HIST_CSV_FILE, index=False)
 
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
@@ -106,9 +106,11 @@ def main():
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
+
+
             my_dict = {'Query': question_on_insurance, 'Response': model_output, 'Correct': str(successful_run)}
             history = history.append(my_dict, ignore_index=True)
-            history.to_csv(HIST_CSV_FILE)
+            history.to_csv(HIST_CSV_FILE, index=False)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
