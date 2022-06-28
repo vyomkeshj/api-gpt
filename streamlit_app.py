@@ -25,8 +25,10 @@ def main():
     history = []
     try:
         history = pd.read_csv(HIST_CSV_FILE, index=False)
+        history.head()
     except:
         history = pd.DataFrame(columns=['Query', 'Response'])
+        print("hist read failed")
 
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
