@@ -50,7 +50,7 @@ def main():
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
 
-    example = """How many people have claims for each auto model?"""
+    example = """Query to calculate the number of people over the age of 62 and above average capital gains?"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
