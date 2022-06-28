@@ -109,7 +109,7 @@ def main():
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
             my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}""",
-                       'Correct': f"""str(successful_run)"""s}
+                       'Correct': f"""str(successful_run)"""}
             history = history.append(my_dict, ignore_index=True)
             history.to_csv(HIST_CSV_FILE, index=False)
 
