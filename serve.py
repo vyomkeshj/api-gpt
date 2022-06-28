@@ -23,10 +23,10 @@ app = FastAPI()
 
 # DATA_CSV_FILE = './gistfile1.txt'
 # data = pd.read_csv(DATA_CSV_FILE, sep=';')
-# data.name = 'insurance_data'
+data.name = 'insurance_data'
 conn = sqlite3.connect("insurance.db")  # if the db does not exist, this creates a Any_Database_Name.db file in the current directory
 # store your table in the database:
-# data.to_sql('insurance_data', conn)
+data.to_sql('insurance_data', conn)
 
 params = {
     "layers": 28,
