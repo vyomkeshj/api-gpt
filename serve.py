@@ -64,64 +64,11 @@ network.state = read_ckpt(network.state, "./step_383500/", devices.shape[1])
 del network.state["opt_state"]
 network.state = network.move_xmap(network.state, np.zeros(cores_per_replica))
 
-header = """###Postgres SQL tables, with their properties:"""
-schema = """#Insurance_Data(months_as_customer,age,policy_number,policy_bind_date,policy_state,policy_csl,policy_deductable,policy_annual_premium,umbrella_limit,insured_zip,insured_sex,insured_education_level,insured_occupation,insured_hobbies,insured_relationship,capital_gains,capital_loss,incident_date,incident_type,collision_type,incident_severity,authorities_contacted,incident_state,incident_city,incident_location,incident_hour_of_the_day,number_of_vehicles_involved,property_damage,bodily_injuries,witnesses,police_report_available,total_claim_amount,injury_claim,property_claim,vehicle_claim,auto_make,auto_model,auto_year,fraud_reported)"""
-context_initial = f"{header}\n{schema}"
-
-
-@app.post("/generate")
-async def generate(
-        question: str,
-        token_max_length: Optional[int] = 330,
-        temperature: Optional[float] = 0.20,
-        top_p: Optional[float] = 0.95,
-        stop_sequence: Optional[str] = "\n",
-):
-    start = time.time()
-    input = f"{context_initial}\n###{question}\nSELECT"
-    print(input)
-
-    tokens = tokenizer.encode(input)
-    provided_ctx = len(tokens)
-    if token_max_length + provided_ctx > 2048:
-        return {"text": "Don't abuse the API, please."}
-    pad_amount = seq - provided_ctx
-
-    padded_tokens = np.pad(tokens, ((pad_amount, 0),)).astype(np.uint32)
-    batched_tokens = np.array([padded_tokens] * total_batch)
-    length = np.ones(total_batch, dtype=np.uint32) * len(tokens)
-
-    output = network.generate(
-        batched_tokens,
-        length,
-        token_max_length,
-        {
-            "top_p": np.ones(total_batch) * top_p,
-            "temp": np.ones(total_batch) * temperature,
-        },
-    )
-
-    text = tokenizer.decode(output[1][0][0, :, 0])
-
-    # A simple technique to stop at stop_sequence without modifying the underlying model
-    if stop_sequence is not None and stop_sequence in text:
-        text = text.split(stop_sequence)[0] + stop_sequence
-
-    response = {}
-    response["model"] = "gpt-sql"
-    response["compute_time"] = time.time() - start
-    response["text"] = "SELECT" + text
-    response["prompt"] = question
-    response["token_max_length"] = token_max_length
-    response["temperature"] = temperature
-    response["top_p"] = top_p
-    response["stop_sequence"] = stop_sequence
-
-    return response
-
 
 @app.post("/run_query")
 async def generate(
+        header: str,
+        schema: str,
         question: str,
         token_max_length: Optional[int] = 330,
         temperature: Optional[float] = 0.18,
@@ -131,8 +78,8 @@ async def generate(
 
 ):
     start = time.time()
+    context_initial = f"{header}\n{schema}"
     input = f"{context_initial}\n###{question}\nSELECT"
-
     tokens = tokenizer.encode(input)
     provided_ctx = len(tokens)
     if token_max_length + provided_ctx > 2048:

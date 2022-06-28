@@ -6,6 +6,9 @@ import sqlite3
 from st_aggrid import AgGrid
 from datetime import datetime
 
+header = """###Postgres SQL tables, with their properties:"""
+schema = """#Insurance_Data(months_as_customer,age,policy_number,policy_bind_date,policy_state,policy_csl,policy_deductable,policy_annual_premium,umbrella_limit,insured_zip,insured_sex,insured_education_level,insured_occupation,insured_hobbies,insured_relationship,capital_gains,capital_loss,incident_date,incident_type,collision_type,incident_severity,authorities_contacted,incident_state,incident_city,incident_location,incident_hour_of_the_day,number_of_vehicles_involved,property_damage,bodily_injuries,witnesses,police_report_available,total_claim_amount,injury_claim,property_claim,vehicle_claim,auto_make,auto_model,auto_year,fraud_reported)"""
+
 DATA_CSV_FILE = './gistfile1.txt'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
 data.name = 'insurance_data'
@@ -62,6 +65,7 @@ def main():
         successful_run = False
         if submit_button:
             try_count = 5
+
             payload = {
                 "question": question_on_insurance,
                 "token_max_length": 350,
@@ -75,6 +79,9 @@ def main():
                 try:
                     model_output = response["query"]
                     print(model_output)
+                    # Save to history
+                    history.concat([date_time, question_on_insurance, model_output])
+
                     result = pd.read_sql(model_output, conn)
                     # print(result.head(5))
                     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
@@ -82,8 +89,6 @@ def main():
                     # question_col.dataframe(data=result, width=None, height=None)
                     AgGrid(result)
 
-                    # Save to history
-                    history.concat([date_time, question_on_insurance, model_output])
                     data_col.dataframe(data=history, width=None, height=None)
                     history.to_csv(HIST_CSV_FILE)
 
