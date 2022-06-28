@@ -110,9 +110,8 @@ def main():
                 question_col.markdown("Please try again with a slightly tweaked question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
-
-    history.to_csv(HIST_CSV_FILE, index=False)
-    question_col.dataframe(data=result, width=None, height=None)
+                history.to_csv(HIST_CSV_FILE, index=False)
+                question_col.dataframe(data=result, width=None, height=None)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
