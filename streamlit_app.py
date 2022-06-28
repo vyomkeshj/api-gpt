@@ -64,9 +64,9 @@ def main():
             while try_count > 0:
                 query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
                 response = query.json()
-                model_output = response["query"]
-                print(model_output)
                 try:
+                    model_output = response["query"]
+                    print(model_output)
                     result = pd.read_sql(model_output, conn)
                     print(result.head(5))
                     # question_col.dataframe(data=result, width=None, height=None)
