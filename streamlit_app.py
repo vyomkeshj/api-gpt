@@ -74,7 +74,7 @@ def main():
                 "token_max_length": 100,
                 "stop_sequence": "\n###",
                 "temperature": temperature_val,
-                "top_p": 1.0,
+                "top_p": 0.99,
             }
 
             while try_count > 0:
@@ -106,7 +106,7 @@ def main():
                     print(f"failed to execute {e}")
                     try_count -= 1
             if not successful_run:
-                question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
+                question_col.markdown("Please try again with a slightly tweaked question? :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
 
