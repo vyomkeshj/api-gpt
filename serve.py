@@ -165,7 +165,7 @@ async def generate(
 
         try:
             print(f"SELECT {model_output}")
-            response["query"] = f"SELECT {model_output}
+            response["query"] = f"SELECT {model_output}"
 
             result = pd.read_sql(f"SELECT {model_output}", conn)
 
