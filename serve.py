@@ -137,7 +137,7 @@ async def generate(
     tokens = tokenizer.encode(input)
     provided_ctx = len(tokens)
     if token_max_length + provided_ctx > 2048:
-        return {"text": "Don't abuse the API, please."}
+        return {"model_output": "Don't abuse the API, please."}
     pad_amount = seq - provided_ctx
 
     padded_tokens = np.pad(tokens, ((pad_amount, 0),)).astype(np.uint32)
@@ -157,17 +157,17 @@ async def generate(
             },
         )
 
-        text = tokenizer.decode(output[1][0][0, :, 0])
+        model_output = tokenizer.decode(output[1][0][0, :, 0])
 
         # A simple technique to stop at stop_sequence without modifying the underlying model
-        if stop_sequence is not None and stop_sequence in text:
-            text = text.split(stop_sequence)[0]
+        if stop_sequence is not None and stop_sequence in model_output:
+            model_output = model_output.split(stop_sequence)[0]
 
         try:
-            print(f"SELECT {text}")
-            response["query"] = f"SELECT {text}
+            print(f"SELECT {model_output}")
+            response["query"] = f"SELECT {model_output}
 
-            result = pd.read_sql(f"SELECT {text}", conn)
+            result = pd.read_sql(f"SELECT {model_output}", conn)
 
             try_count = 0
             response["html"] = result.to_html()
