@@ -89,8 +89,8 @@ def main():
 
                     try_count = 0
                     successful_run = True
-                except:
-                    print("failed to execute")
+                except Exception as e:
+                    print(f"failed to execute {e}")
                     try_count -= 1
             if not successful_run:
                 question_col.markdown("Please try again with a slightly different question? :)", unsafe_allow_html=True)
