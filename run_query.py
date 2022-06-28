@@ -26,8 +26,8 @@ if __name__ == "__main__":
     question_on_insurance = args.question
     payload = {
         "question": question_on_insurance,
-        "token_max_length": 400,
-        "temperature": 0.20,
+        "token_max_length": 350,
+        "temperature": 0.18,
         "top_p": 0.95,
     }
 
