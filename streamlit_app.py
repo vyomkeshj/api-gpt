@@ -23,7 +23,7 @@ def get_generated(obj):
     return obj["generated_text"]
 
 
-DATA_CSV_FILE = './gistfile1.txt'
+DATA_CSV_FILE = './insurance_data.csv'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
 data.name = 'insurance_data'
 conn = sqlite3.connect("insurance.db")
