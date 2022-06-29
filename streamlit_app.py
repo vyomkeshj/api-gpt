@@ -66,6 +66,7 @@ def main():
 
     st.title("Q. Research Edition")
     st.text("Hint: please use real column names for improved results...")
+    st.text("Hint: Try running again if the model fails the first time!")
 
     question_col, data_col = st.columns((1, 1))
     data_col.header("Insurance Data")
@@ -126,6 +127,7 @@ def main():
                     context_initial = f"{header}\n{schema}"
                     input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
                     model_output = get_generated(client.generation(f"{input}", **kwargs))
+                    model_output = f"SELECT{model_output}
                     result = pd.read_sql(model_output, conn)
                     last_output = result
                     question_col.text(f"raw_output(cheated): {model_output}")
