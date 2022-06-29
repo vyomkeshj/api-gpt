@@ -77,7 +77,8 @@ def main():
     )
     allow_cheating = st.checkbox('Enable Cheating', value=True, help="""Allow the model to learn\
                                                                        from bigger models by cheating on this query.
-                                                                       This will make the model better over time.""")
+                                                                       This allows us to train the model against\
+                                                                        models that actually work on your query""")
     # temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
 
     response = None
@@ -101,6 +102,7 @@ def main():
                 response = query.json()
                 model_output = response["query"]
                 try:
+                    question_col.text(f"raw_output(our model): {model_output}")
                     result = pd.read_sql(model_output, conn)
                     # Save to history
                     my_dict = {'Query': question_on_insurance,
@@ -109,9 +111,6 @@ def main():
                     history = history.append(my_dict, ignore_index=True)
 
                     last_output = result
-                    # AgGrid(result)
-                    question_col.text(f"raw_output: {model_output}")
-
                     try_count = 0
                     successful_run = True
                 except Exception as e:
@@ -124,7 +123,7 @@ def main():
                     sql = get_generated(client.generation(f"{input}", **kwargs))
                     result = pd.read_sql(model_output, conn)
                     last_output = result
-                    question_col.text(f"raw_output: {model_output}")
+                    question_col.text(f"raw_output(cheated): {model_output}")
                     my_dict = {'Query': question_on_insurance,
                                'Response': f"""{model_output}""",
                                'has_cheated': 'True'}
