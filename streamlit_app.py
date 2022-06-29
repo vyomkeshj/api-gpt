@@ -8,8 +8,8 @@ from datetime import datetime
 import nlpcloud
 
 header = """### SQLite SQL tables, with their properties:"""
-schema_bak = """# Insurance_Data(months_as_customer, age, policy_number, policy_bind_date, policy_state, policy_csl, policy_deductable, policy_annual_premium, umbrella_limit, insured_zip, insured_sex, insured_education_level, insured_occupation, insured_hobbies, insured_relationship, capital_gains, capital_loss, incident_date, incident_type, collision_type, incident_severity, authorities_contacted, incident_state, incident_city, incident_location, incident_hour_of_the_day, number_of_vehicles_involved, property_damage, bodily_injuries, witnesses, police_report_available, total_claim_amount, injury_claim, property_claim, vehicle_claim, auto_make, auto_model, auto_year, fraud_reported)"""
-schema = """# Insurance_Data(months as customer,age,policy number,policy bind date,policy state,policy csl,policy deductable,policy annual premium,umbrella limit,insured zip,insured sex,insured education level,insured occupation,insured hobbies,insured relationship,capital gains,capital loss,incident date,incident type,collision type,incident severity,authorities contacted,incident state,incident city,incident location,incident hour of the day,number of vehicles involved,property damage,bodily injuries,witnesses,police report available,total claim amount,injury claim,property claim,vehicle claim,auto make,auto model,auto year,fraud reported)"""
+schema = """# Insurance_Data(months_as_customer, age, policy_number, policy_bind_date, policy_state, policy_csl, policy_deductable, policy_annual_premium, umbrella_limit, insured_zip, insured_sex, insured_education_level, insured_occupation, insured_hobbies, insured_relationship, capital_gains, capital_loss, incident_date, incident_type, collision_type, incident_severity, authorities_contacted, incident_state, incident_city, incident_location, incident_hour_of_the_day, number_of_vehicles_involved, property_damage, bodily_injuries, witnesses, police_report_available, total_claim_amount, injury_claim, property_claim, vehicle_claim, auto_make, auto_model, auto_year, fraud_reported)"""
+# schema = """# Insurance_Data(months as customer,age,policy number,policy bind date,policy state,policy csl,policy deductable,policy annual premium,umbrella limit,insured zip,insured sex,insured education level,insured occupation,insured hobbies,insured relationship,capital gains,capital loss,incident date,incident type,collision type,incident severity,authorities contacted,incident state,incident city,incident location,incident hour of the day,number of vehicles involved,property damage,bodily injuries,witnesses,police report available,total claim amount,injury claim,property claim,vehicle claim,auto make,auto model,auto year,fraud reported)"""
 
 client = nlpcloud.Client("finetuned-gpt-neox-20b", "6b8a5bb4bc0bc846866168a32a86b0372683fe85", True)
 
@@ -25,7 +25,7 @@ def get_generated(obj):
     return obj["generated_text"]
 
 
-DATA_CSV_FILE = './insurance_data.csv'
+DATA_CSV_FILE = './gistfile1.txt'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
 data.name = 'insurance_data'
 conn = sqlite3.connect("insurance.db")
@@ -73,7 +73,7 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """what are the top ten insured relationship for people with the highest claim amount"""
+    example = """what are the top ten insured_relationship for people with the highest claim amount"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
