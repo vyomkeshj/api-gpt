@@ -125,7 +125,7 @@ def main():
                 if allow_cheating:
                     context_initial = f"{header}\n{schema}"
                     input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
-                    sql = get_generated(client.generation(f"{input}", **kwargs))
+                    model_output = get_generated(client.generation(f"{input}", **kwargs))
                     result = pd.read_sql(model_output, conn)
                     last_output = result
                     question_col.text(f"raw_output(cheated): {model_output}")
