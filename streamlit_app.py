@@ -127,7 +127,7 @@ def main():
                     context_initial = f"{header}\n{schema}"
                     input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
                     model_output = get_generated(client.generation(f"{input}", **kwargs))
-                    model_output = f"SELECT{model_output}
+                    model_output = f"SELECT{model_output}"
                     result = pd.read_sql(model_output, conn)
                     last_output = result
                     question_col.text(f"raw_output(cheated): {model_output}")
