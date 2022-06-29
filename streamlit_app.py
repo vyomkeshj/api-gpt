@@ -79,7 +79,7 @@ def main():
                                                                        from bigger models by cheating on this query.
                                                                        This allows us to train the model against\
                                                                         models that actually work on your query""")
-    st.text("The model tells you when  it cheats!")
+    st.text("The model tells you when it cheats!")
 
     # temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
 
