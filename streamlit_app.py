@@ -130,6 +130,7 @@ def main():
                     model_output = f"SELECT{model_output}"
                     result = pd.read_sql(model_output, conn)
                     last_output = result
+                    question_col.dataframe(data=result, width=None, height=None)
                     question_col.text(f"raw_output(cheated): {model_output}")
                     my_dict = {'Query': question_on_insurance,
                                'Response': f"""{model_output}""",
