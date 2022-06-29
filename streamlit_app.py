@@ -120,6 +120,7 @@ def main():
                 except Exception as e:
                     print(f"failed to execute {e}")
                     try_count -= 1
+                    successful_run = False
             if not successful_run:
                 if allow_cheating:
                     context_initial = f"{header}\n{schema}"
