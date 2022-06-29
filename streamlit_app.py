@@ -63,9 +63,9 @@ def main():
     st.markdown(hide_menu_style, unsafe_allow_html=True)
 
     st.title("Q. Research Edition")
+    st.text("Hint: please use real column names for improved results...")
 
     question_col, data_col = st.columns((1, 1))
-    question_col.header("...")
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
     data_col.header("Query History")
@@ -75,7 +75,6 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    st.text("Hint: please use real column names for improved results...")
     allow_cheating = st.checkbox('Enable Cheating', value=True, help="""Allow the model to learn\
                                                                        from bigger models by cheating on this query.
                                                                        This allows us to train the model against\
