@@ -5,9 +5,23 @@ import pandas as pd
 import sqlite3
 from st_aggrid import AgGrid
 from datetime import datetime
+import nlpcloud
 
 header = """### SQLite SQL tables, with their properties:"""
 schema = """# Insurance_Data(months_as_customer, age, policy_number, policy_bind_date, policy_state, policy_csl, policy_deductable, policy_annual_premium, umbrella_limit, insured_zip, insured_sex, insured_education_level, insured_occupation, insured_hobbies, insured_relationship, capital_gains, capital_loss, incident_date, incident_type, collision_type, incident_severity, authorities_contacted, incident_state, incident_city, incident_location, incident_hour_of_the_day, number_of_vehicles_involved, property_damage, bodily_injuries, witnesses, police_report_available, total_claim_amount, injury_claim, property_claim, vehicle_claim, auto_make, auto_model, auto_year, fraud_reported)"""
+client = nlpcloud.Client("finetuned-gpt-neox-20b", "6b8a5bb4bc0bc846866168a32a86b0372683fe85", True)
+
+kwargs = {'min_length': 0, 'max_length': 300, 'length_no_input': True,
+          'remove_input': True, 'end_sequence': '###', 'top_p': 1,
+          'temperature': 0.6, 'top_k': 50, 'repetition_penalty': 1,
+          'length_penalty': 1, 'do_sample': True, 'early_stopping': True,
+          'num_beams': 1, 'no_repeat_ngram_size': 0, 'num_return_sequences': 1,
+          'bad_words': ["bad"], 'remove_end_sequence': True}
+
+
+def get_generated(obj):
+    return obj["generated_text"]
+
 
 DATA_CSV_FILE = './gistfile1.txt'
 data = pd.read_csv(DATA_CSV_FILE, sep=';')
@@ -61,6 +75,9 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
+    allow_cheating = st.checkbox('Enable Cheating', value=True, help="""Allow the model to learn\
+                                                                       from bigger models by cheating on this query.
+                                                                       This will make the model better over time.""")
     # temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
 
     response = None
@@ -84,18 +101,12 @@ def main():
                 response = query.json()
                 model_output = response["query"]
                 try:
-                    ## todo: do something to manage dialects
-                    model_output = model_output.replace("average(", "AVG(")
-
-                    print(model_output)
                     result = pd.read_sql(model_output, conn)
                     # Save to history
-                    my_dict = {'Query': question_on_insurance, 'Response': f"""{model_output}"""}
+                    my_dict = {'Query': question_on_insurance,
+                               'Response': f"""{model_output}""",
+                               'has_cheated': 'False'}
                     history = history.append(my_dict, ignore_index=True)
-
-                    # print(result.head(5))
-                    # data_col.header("Query History")
-                    # data_col.dataframe(data=history, width=None, height=None)
 
                     last_output = result
                     # AgGrid(result)
@@ -107,7 +118,19 @@ def main():
                     print(f"failed to execute {e}")
                     try_count -= 1
             if not successful_run:
-                question_col.markdown("Please try again with a slightly tweaked question? :)", unsafe_allow_html=True)
+                if allow_cheating:
+                    context_initial = f"{header}\n{schema}"
+                    input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
+                    sql = get_generated(client.generation(f"{input}", **kwargs))
+                    result = pd.read_sql(model_output, conn)
+                    last_output = result
+                    question_col.text(f"raw_output: {model_output}")
+                    my_dict = {'Query': question_on_insurance,
+                               'Response': f"""{model_output}""",
+                               'has_cheated': 'True'}
+                    history = history.append(my_dict, ignore_index=True)
+                else:
+                    question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
             else:
                 question_col.text(f"Query done in {response['compute_time']:.3} s.")
                 history.to_csv(HIST_CSV_FILE, index=False)
