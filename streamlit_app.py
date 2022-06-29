@@ -73,7 +73,7 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """what are the top ten insured_relationship for people with the highest claim amount"""
+    example = """what are the top ten insured relationship for people with the highest claim amount"""
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
