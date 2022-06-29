@@ -73,7 +73,7 @@ def main():
 
     example = """what are the top ten insured_relationship for people with the highest claim amount"""
     question_on_insurance = question_col.text_area(
-        "Ask your question!", example, max_chars=2000, height=150
+        "Ask your question! (please use real column names for better results for now)", example, max_chars=2000, height=150
     )
     allow_cheating = st.checkbox('Enable Cheating', value=True, help="""Allow the model to learn\
                                                                        from bigger models by cheating on this query.
