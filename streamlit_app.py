@@ -103,25 +103,28 @@ def main():
             }
 
             while try_count > 0:
-                query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
-                response = query.json()
-                model_output = response["query"]
                 try:
-                    question_col.text(f"raw_output(our model): {model_output}")
-                    result = pd.read_sql(model_output, conn)
-                    # Save to history
-                    my_dict = {'Query': question_on_insurance,
-                               'Response': f"""{model_output}""",
-                               'has_cheated': 'False'}
-                    history = history.append(my_dict, ignore_index=True)
+                    query = requests.post("http://10.164.0.15:5000/run_query", params=payload)
+                    response = query.json()
+                    model_output = response["query"]
+                    try:
+                        question_col.text(f"raw_output(our model): {model_output}")
+                        result = pd.read_sql(model_output, conn)
+                        # Save to history
+                        my_dict = {'Query': question_on_insurance,
+                                   'Response': f"""{model_output}""",
+                                   'has_cheated': 'False'}
+                        history = history.append(my_dict, ignore_index=True)
 
-                    last_output = result
-                    try_count = 0
-                    successful_run = True
-                except Exception as e:
-                    print(f"failed to execute {e}")
-                    try_count -= 1
-                    successful_run = False
+                        last_output = result
+                        try_count = 0
+                        successful_run = True
+                    except Exception as e:
+                        print(f"failed to execute {e}")
+                        try_count -= 1
+                        successful_run = False
+                except:
+                    question_col.markdown("The model is training! falling back to cheating")
             if not successful_run:
                 if allow_cheating:
                     context_initial = f"{header}\n{schema}"
