@@ -71,7 +71,7 @@ async def generate(
         schema: str,
         question: str,
         token_max_length: Optional[int] = 330,
-        temperature: Optional[float] = 0.18,
+        temperature: Optional[float] = 0.9,
         top_p: Optional[float] = 1.0,
         stop_sequence: Optional[str] = "\n",
         try_count: Optional[int] = 5,
