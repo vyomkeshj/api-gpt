@@ -60,7 +60,7 @@ tokenizer = transformers.GPT2TokenizerFast.from_pretrained("gpt2")
 total_batch = per_replica_batch * jax.device_count() // cores_per_replica
 
 network = CausalTransformer(params)
-network.state = read_ckpt(network.state, "./gpt_sql_slim/", devices.shape[1])
+network.state = read_ckpt(network.state, "./gpt_sql_slim_wsql/", devices.shape[1])
 del network.state["opt_state"]
 network.state = network.move_xmap(network.state, np.zeros(cores_per_replica))
 
@@ -73,7 +73,7 @@ async def generate(
         token_max_length: Optional[int] = 330,
         temperature: Optional[float] = 0.9,
         top_p: Optional[float] = 1.0,
-        stop_sequence: Optional[str] = "\n",
+        stop_sequence: Optional[str] = "###",
         try_count: Optional[int] = 5,
 
 ):
