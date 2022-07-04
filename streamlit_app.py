@@ -98,8 +98,8 @@ def main():
                 "question": question_on_insurance,
                 "token_max_length": 250,
                 "stop_sequence": "###",
-                "temperature": 0.90,
-                "top_p": 0.95,
+                "temperature": 0.05,
+                "top_p": 0.1,
             }
 
             while try_count > 0:
