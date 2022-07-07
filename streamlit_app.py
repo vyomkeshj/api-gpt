@@ -102,7 +102,7 @@ def main():
                 "token_max_length": 250,
                 "stop_sequence": "###",
                 "temperature": 0.05,
-                "top_p": 0.1,
+                "top_p": 1.0,
             }
 
             while try_count > 0:
