@@ -128,26 +128,27 @@ def main():
                         successful_run = False
                 except:
                     question_col.markdown("The model is training! falling back to cheating")
-            if not successful_run:
-                if allow_cheating:
-                    context_initial = f"{header}\n{schema}"
-                    input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
-                    model_output = get_generated(client.generation(f"{input}", **kwargs))
-                    model_output = f"SELECT{model_output}"
-                    result = pd.read_sql(model_output, conn)
-                    last_output = result
-                    question_col.dataframe(data=result, width=None, height=None)
-                    question_col.text(f"raw_output(cheated): {model_output}")
-                    my_dict = {'Query': question_on_insurance,
-                               'Response': f"""{model_output}""",
-                               'has_cheated': 'True'}
-                    history = history.append(my_dict, ignore_index=True)
-                else:
-                    question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
-            else:
-                question_col.text(f"Query done in {response['compute_time']:.3} s.")
-                history.to_csv(HIST_CSV_FILE, index=False)
+
+            if allow_cheating:
+                context_initial = f"{header}\n{schema}"
+                input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
+                model_output = get_generated(client.generation(f"{input}", **kwargs))
+                model_output = f"SELECT{model_output}"
+                result = pd.read_sql(model_output, conn)
+                last_output = result
                 question_col.dataframe(data=result, width=None, height=None)
+                question_col.text(f"raw_output(cheated): {model_output}")
+                my_dict = {'Query': question_on_insurance,
+                           'Response': f"""{model_output}""",
+                           'has_cheated': 'True'}
+                history = history.append(my_dict, ignore_index=True)
+            else:
+                question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
+
+        else:
+            question_col.text(f"Query done in {response['compute_time']:.3} s.")
+            history.to_csv(HIST_CSV_FILE, index=False)
+            question_col.dataframe(data=result, width=None, height=None)
 
     if False:
         col1, col2, *rest = st.columns([1, 1, 10, 10])
