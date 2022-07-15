@@ -81,11 +81,11 @@ def main():
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
-    allow_cheating = st.checkbox('Enable Cheating', value=True, help="""Allow the model to learn\
-                                                                       from bigger models by cheating on this query.
-                                                                       This allows us to train the model against\
-                                                                        models that actually work on your query""")
-    st.text("The model tells you when it cheats!")
+    # allow_cheating = st.checkbox('Enable Cheating', value=True, help="""Allow the model to learn\
+    #                                                                    from bigger models by cheating on this query.
+    #                                                                    This allows us to train the model against\
+    #                                                                     models that actually work on your query""")
+    # st.text("The model tells you when it cheats!")
 
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=0.05)
     top_p_val = question_col.slider("Top p", 0.2, 1.0, value=1.0)
@@ -113,7 +113,7 @@ def main():
                     model_output = response["query"]
                     try:
                         question_col.text(f"raw_output(our model): {model_output}")
-                        result = pd.read_sql(model_output, conn)
+                        result = pd.read_sql(f"{model_output};", conn)
                         # Save to history
                         my_dict = {'Query': question_on_insurance,
                                    'Response': f"""{model_output}""",
@@ -122,28 +122,28 @@ def main():
                         question_col.dataframe(data=result, width=None, height=None)
 
                         try_count = 0
-                        successful_run = True
+                        # successful_run = True
                     except Exception as e:
                         print(f"failed to execute {e}")
                         try_count -= 1
-                        successful_run = False
+                        # successful_run = False
                 except:
-                    question_col.markdown("The model is training! falling back to cheating")
+                    question_col.markdown("The api seems to be down!")
 
-            if allow_cheating and not successful_run:
-                context_initial = f"{header}\n{schema}"
-                neo_input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
-                model_output = get_generated(client.generation(f"{neo_input}", **kwargs))
-                model_output = f"SELECT{model_output}"
-                result = pd.read_sql(model_output, conn)
-                question_col.dataframe(data=result, width=None, height=None)
-                question_col.text(f"raw_output(cheated): {model_output}")
-                my_dict = {'Query': question_on_insurance,
-                           'Response': f"""{model_output}""",
-                           'has_cheated': 'True'}
-                history.append(my_dict, ignore_index=True)
-            else:
-                question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
+            # if allow_cheating and not successful_run:
+            #     context_initial = f"{header}\n{schema}"
+            #     neo_input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
+            #     model_output = get_generated(client.generation(f"{neo_input}", **kwargs))
+            #     model_output = f"SELECT{model_output}"
+            #     result = pd.read_sql(model_output, conn)
+            #     question_col.dataframe(data=result, width=None, height=None)
+            #     question_col.text(f"raw_output(cheated): {model_output}")
+            #     my_dict = {'Query': question_on_insurance,
+            #                'Response': f"""{model_output}""",
+            #                'has_cheated': 'True'}
+            #     history.append(my_dict, ignore_index=True)
+            # else:
+            #     question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
 
         else:
             history.to_csv(HIST_CSV_FILE, index=False)
