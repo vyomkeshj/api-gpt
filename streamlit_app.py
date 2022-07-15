@@ -1,14 +1,21 @@
 import streamlit as st
-import time
 import requests
 import pandas as pd
 import sqlite3
-from datetime import datetime
 import nlpcloud
 
+temperature = 0.32
+top_p = 1.0
+
 header = """###Postgre SQL tables, with their properties:"""
-default_schema = """# insurance_data: ("months_as_customer", "age", "policy_number", "policy_bind_date", "policy_state", "policy_csl", "policy_deductable", "policy_annual_premium", "umbrella_limit", "insured_zip", "insured_sex", "insured_education_level", "insured_occupation", "insured_hobbies", "insured_relationship", "capital_gains", "capital_loss", "incident_date", "incident_type", "collision_type", "incident_severity", "authorities_contacted", "incident_state", "incident_city", "incident_location", "incident_hour_of_the_day", "number_of_vehicles_involved", "property_damage", "bodily_injuries", "witnesses", "police_report_available", "total_claim_amount", "injury_claim", "property_claim", "vehicle_claim", "auto_make", "auto_model", "auto_year", "fraud_reported"]"""
-# schema = """# Insurance_Data(months as customer,age,policy number,policy bind date,policy state,policy csl,policy deductable,policy annual premium,umbrella limit,insured zip,insured sex,insured education level,insured occupation,insured hobbies,insured relationship,capital gains,capital loss,incident date,incident type,collision type,incident severity,authorities contacted,incident state,incident city,incident location,incident hour of the day,number of vehicles involved,property damage,bodily injuries,witnesses,police report available,total claim amount,injury claim,property claim,vehicle claim,auto make,auto model,auto year,fraud reported)"""
+default_schema = """# insurance_data: ("months_as_customer", "age", "policy_number", "policy_bind_date", 
+"policy_state", "policy_csl", "policy_deductible", "policy_annual_premium", "umbrella_limit", "insured_zip", 
+"insured_sex", "insured_education_level", "insured_occupation", "insured_hobbies", "insured_relationship", 
+"capital_gains", "capital_loss", "incident_date", "incident_type", "collision_type", "incident_severity", 
+"authorities_contacted", "incident_state", "incident_city", "incident_location", "incident_hour_of_the_day", 
+"number_of_vehicles_involved", "property_damage", "bodily_injuries", "witnesses", "police_report_available", 
+"total_claim_amount", "injury_claim", "property_claim", "vehicle_claim", "auto_make", "auto_model", "auto_year", 
+"fraud_reported"] """
 
 client = nlpcloud.Client("finetuned-gpt-neox-20b", "6b8a5bb4bc0bc846866168a32a86b0372683fe85", True)
 
@@ -79,8 +86,8 @@ def main():
     #                                                                     models that actually work on your query""")
     # st.text("The model tells you when it cheats!")
 
-    temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=0.05)
-    top_p_val = question_col.slider("Top p", 0.2, 1.0, value=1.0)
+    temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=temperature)
+    top_p_val = question_col.slider("Top p", 0.2, 1.0, value=top_p)
     raw_output = question_col.text(f"raw_output(our model):")
 
     response = None
