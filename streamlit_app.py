@@ -112,8 +112,8 @@ def main():
                     response = query.json()
                     model_output = response["query"]
                     try:
-                        result = pd.read_sql(f"{model_output};", conn)
                         raw_output.write(f"raw_output(our model): {model_output};")
+                        result = pd.read_sql(f"{model_output};", conn)
 
                         # Save to history
                         my_dict = {'Query': question_on_insurance,
