@@ -100,7 +100,7 @@ async def generate(
         token_max_length,
         {
             "top_p": np.ones(total_batch) * top_p,
-            "top_k": top_k is not None and (np.ones(per_replica_batch, dtype=np.int32) * top_k) or None,
+            "top_k": top_k is not None and (np.ones(total_batch, dtype=np.int32) * top_k) or None,
             "temp": np.ones(total_batch) * temperature,
             # "num_beams": np.ones(total_batch) * num_beams
         },
