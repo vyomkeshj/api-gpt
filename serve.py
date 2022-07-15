@@ -102,7 +102,7 @@ async def generate(
             "top_p": np.ones(total_batch) * top_p,
             "top_k": top_k is not None and (np.ones(per_replica_batch, dtype=np.int32) * top_k) or None,
             "temp": np.ones(total_batch) * temperature,
-            "num_beams": np.ones(total_batch) * num_beams
+            # "num_beams": np.ones(total_batch) * num_beams
         },
     )
 
