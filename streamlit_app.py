@@ -3,7 +3,6 @@ import time
 import requests
 import pandas as pd
 import sqlite3
-from st_aggrid import AgGrid
 from datetime import datetime
 import nlpcloud
 
@@ -39,13 +38,6 @@ HIST_CSV_FILE = './history.csv'
 
 def main():
     history = pd.read_csv(HIST_CSV_FILE)
-    # history.head()
-    # except:
-    #     history = pd.DataFrame(columns=['Query', 'Response'])
-    #     print("hist read failed")
-
-    last_output = pd.DataFrame(columns=["OUTPUT TABLE"])
-
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
     insurance_table = pd.DataFrame.from_records(data=query.fetchall(), columns=cols)
@@ -89,6 +81,7 @@ def main():
 
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=0.05)
     top_p_val = question_col.slider("Top p", 0.2, 1.0, value=1.0)
+    raw_output = question_col.text(f"raw_output(our model):")
 
     response = None
     with question_col.form(key="inputs"):
@@ -114,6 +107,8 @@ def main():
                     try:
                         question_col.text(f"raw_output(our model): {model_output}")
                         result = pd.read_sql(f"{model_output};", conn)
+                        raw_output.write(f"raw_output(our model): {model_output}")
+
                         # Save to history
                         my_dict = {'Query': question_on_insurance,
                                    'Response': f"""{model_output}""",
