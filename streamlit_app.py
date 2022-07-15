@@ -76,7 +76,7 @@ def main():
 
     example = """what are the top ten insured_relationship for people with the highest claim amount"""
     schema = question_col.text_area(
-        "Put the schema here!", default_schema, max_chars=8000, height=150
+        "Put the schema here!", default_schema, max_chars=1000, height=150
     )
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
@@ -146,9 +146,7 @@ def main():
                 question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
 
         else:
-            question_col.text(f"Query done in {response['compute_time']:.3} s.")
             history.to_csv(HIST_CSV_FILE, index=False)
-            # question_col.dataframe(data=result, width=None, height=None)
 
     st.text("V0.0.2")
 
