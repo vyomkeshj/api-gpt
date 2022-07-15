@@ -36,6 +36,8 @@ except:
 
 HIST_CSV_FILE = './history.csv'
 
+example = """How many people love in policy state OH?"""
+
 
 def main():
     history = pd.read_csv(HIST_CSV_FILE)
@@ -67,7 +69,6 @@ def main():
     data_col.header("Query History")
     data_col.dataframe(data=history, width=None, height=None)
 
-    example = """what are the top ten insured_relationship for people with the highest claim amount"""
     schema = question_col.text_area(
         "Put the schema here!", default_schema, max_chars=1000, height=150
     )
@@ -89,7 +90,7 @@ def main():
         submit_button = st.form_submit_button(label="Ask Q!")
         successful_run = False
         if submit_button:
-            try_count = 5
+            try_count = 10
             payload = {
                 "header": header,
                 "schema": schema,
