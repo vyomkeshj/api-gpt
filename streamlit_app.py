@@ -123,28 +123,29 @@ def main():
                         question_col.dataframe(data=result, width=None, height=None)
 
                         try_count = 0
-                        # successful_run = True
+                        successful_run = True
                     except Exception as e:
                         print(f"failed to execute {e}")
                         try_count -= 1
-                        # successful_run = False
+                        successful_run = False
                 except:
                     question_col.markdown("The api seems to be down!")
+            if not successful_run:
+                question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
 
-            # if allow_cheating and not successful_run:
-            #     context_initial = f"{header}\n{schema}"
-            #     neo_input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
-            #     model_output = get_generated(client.generation(f"{neo_input}", **kwargs))
-            #     model_output = f"SELECT{model_output}"
-            #     result = pd.read_sql(model_output, conn)
-            #     question_col.dataframe(data=result, width=None, height=None)
-            #     question_col.text(f"raw_output(cheated): {model_output}")
-            #     my_dict = {'Query': question_on_insurance,
-            #                'Response': f"""{model_output}""",
-            #                'has_cheated': 'True'}
-            #     history.append(my_dict, ignore_index=True)
-            # else:
-            #     question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
+        # if allow_cheating and not successful_run:
+        #     context_initial = f"{header}\n{schema}"
+        #     neo_input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
+        #     model_output = get_generated(client.generation(f"{neo_input}", **kwargs))
+        #     model_output = f"SELECT{model_output}"
+        #     result = pd.read_sql(model_output, conn)
+        #     question_col.dataframe(data=result, width=None, height=None)
+        #     question_col.text(f"raw_output(cheated): {model_output}")
+        #     my_dict = {'Query': question_on_insurance,
+        #                'Response': f"""{model_output}""",
+        #                'has_cheated': 'True'}
+        #     history.append(my_dict, ignore_index=True)
+        # else:
 
         else:
             history.to_csv(HIST_CSV_FILE, index=False)
