@@ -39,7 +39,7 @@ HIST_CSV_FILE = './history.csv'
 
 def main():
     history = pd.read_csv(HIST_CSV_FILE)
-    history.head()
+    # history.head()
     # except:
     #     history = pd.DataFrame(columns=['Query', 'Response'])
     #     print("hist read failed")
@@ -87,22 +87,23 @@ def main():
                                                                         models that actually work on your query""")
     st.text("The model tells you when it cheats!")
 
-    # temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90)
+    temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=0.05)
+    top_p_val = question_col.slider("Top p", 0.2, 1.0, value=1.0)
 
     response = None
     with question_col.form(key="inputs"):
         submit_button = st.form_submit_button(label="Ask Q!")
         successful_run = False
         if submit_button:
-            try_count = 3
+            try_count = 5
             payload = {
                 "header": header,
                 "schema": schema,
                 "question": question_on_insurance,
                 "token_max_length": 250,
                 "stop_sequence": ";",
-                "temperature": 0.05,
-                "top_p": 1.0,
+                "temperature": temperature_val,
+                "top_p": top_p_val,
             }
 
             while try_count > 0:
@@ -118,8 +119,8 @@ def main():
                                    'Response': f"""{model_output}""",
                                    'has_cheated': 'False'}
                         history = history.append(my_dict, ignore_index=True)
+                        question_col.dataframe(data=result, width=None, height=None)
 
-                        last_output = result
                         try_count = 0
                         successful_run = True
                     except Exception as e:
@@ -129,31 +130,28 @@ def main():
                 except:
                     question_col.markdown("The model is training! falling back to cheating")
 
-            if allow_cheating:
+            if allow_cheating and not successful_run:
                 context_initial = f"{header}\n{schema}"
-                input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
-                model_output = get_generated(client.generation(f"{input}", **kwargs))
+                neo_input = f"{context_initial}\n###{question_on_insurance}\nSELECT"
+                model_output = get_generated(client.generation(f"{neo_input}", **kwargs))
                 model_output = f"SELECT{model_output}"
                 result = pd.read_sql(model_output, conn)
-                last_output = result
                 question_col.dataframe(data=result, width=None, height=None)
                 question_col.text(f"raw_output(cheated): {model_output}")
                 my_dict = {'Query': question_on_insurance,
                            'Response': f"""{model_output}""",
                            'has_cheated': 'True'}
-                history = history.append(my_dict, ignore_index=True)
+                history.append(my_dict, ignore_index=True)
             else:
                 question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
 
         else:
             question_col.text(f"Query done in {response['compute_time']:.3} s.")
             history.to_csv(HIST_CSV_FILE, index=False)
-            question_col.dataframe(data=result, width=None, height=None)
-
-    if False:
-        col1, col2, *rest = st.columns([1, 1, 10, 10])
+            # question_col.dataframe(data=result, width=None, height=None)
 
     st.text("V0.0.2")
+
 
 if __name__ == "__main__":
     main()
