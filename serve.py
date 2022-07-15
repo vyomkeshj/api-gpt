@@ -71,6 +71,7 @@ async def generate(
         schema: str,
         question: str,
         token_max_length: Optional[int] = 330,
+        num_beams: Optional[int] = 5,
         temperature: Optional[float] = 0.9,
         top_p: Optional[float] = 1.0,
         top_k: Optional[int] = 50,
@@ -101,6 +102,7 @@ async def generate(
             "top_p": np.ones(total_batch) * top_p,
             "top_k": top_k is not None and (np.ones(per_replica_batch, dtype=np.int32) * top_k) or None,
             "temp": np.ones(total_batch) * temperature,
+            "num_beams": np.ones(total_batch) * num_beams
         },
     )
 
