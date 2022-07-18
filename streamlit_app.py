@@ -4,7 +4,7 @@ import pandas as pd
 import sqlite3
 import nlpcloud
 
-temperature = 0.31
+temperature = 0.18
 top_p = 0.96
 
 header = """###Postgre SQL tables, with their properties:"""
