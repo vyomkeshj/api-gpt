@@ -4,7 +4,7 @@ import pandas as pd
 import sqlite3
 import nlpcloud
 
-temperature = 0.18
+temperature = 0.25
 top_p = 0.96
 
 header = """###Postgre SQL tables, with their properties are given below. The year is represented in the incident_date column"""
