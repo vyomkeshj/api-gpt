@@ -96,7 +96,7 @@ def main():
                 "schema": schema,
                 "question": question_on_insurance,
                 "token_max_length": 100,
-                "stop_sequence": ";",
+                "stop_sequence": "#",
                 "temperature": temperature_val,
                 "top_p": top_p_val,
             }
