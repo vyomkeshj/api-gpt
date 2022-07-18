@@ -106,8 +106,10 @@ def main():
                     response = query.json()
                     model_output = response["query"]
                     try:
-                        raw_output.write(f"raw_output(our model): {model_output};")
+                        raw_output.write(f"Attempt #{try_count}")
                         result = pd.read_sql(f"{model_output};", conn)
+                        raw_output.write(f"Generated Query: {model_output};")
+                        question_col.write(f"Please try again with the same query and a higher temperature if ouput is incorrect!")
 
                         # Save to history
                         my_dict = {'Query': question_on_insurance,
