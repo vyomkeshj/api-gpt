@@ -36,7 +36,7 @@ except:
 
 HIST_CSV_FILE = './history.csv'
 
-example = """How many people love in policy state OH?"""
+example = """How many people live in policy state OH and had a collision of the kind Side Collision while driving a Saab at 15:00?"""
 
 
 def main():
@@ -60,7 +60,6 @@ def main():
     st.markdown(hide_menu_style, unsafe_allow_html=True)
 
     st.title("Q. Research Edition")
-    st.text("Hint: please use real column names for improved results...")
     st.text("Hint: Try running again if the model fails the first time!")
 
     question_col, data_col = st.columns((1, 1))
