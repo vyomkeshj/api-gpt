@@ -109,7 +109,7 @@ async def generate(
     model_output = tokenizer.decode(output[1][0][0, :, 0])
 
     # A simple technique to stop at stop_sequence without modifying the underlying model
-    if stop_sequence is not None and stop_sequence in model_output:
+    if ";" in model_output or stop_sequence is not None and stop_sequence in model_output:
         model_output = model_output.split(stop_sequence)[0]
 
     response["query"] = f"SELECT{model_output}"
