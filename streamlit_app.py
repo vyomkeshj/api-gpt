@@ -107,6 +107,8 @@ def main():
                     model_output = response["query"]
                     try:
                         raw_output.write(f"Attempt #{try_count}")
+                        raw_output.write(f"Generated Query: {model_output};")
+
                         result = pd.read_sql(f"{model_output};", conn)
                         raw_output.write(f"Generated Query: {model_output};")
                         question_col.write(f"Please try again with the same query and a higher temperature if ouput is incorrect!")
