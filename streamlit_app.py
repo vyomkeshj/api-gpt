@@ -2,13 +2,29 @@ import streamlit as st
 import requests
 import pandas as pd
 import sqlite3
+
 # import nlpcloud
 
 temperature = 0.11
 top_p = 0.96
 
-header = """###Postgre SQL tables, with their properties are given below. The year is represented in the incident_date column"""
-default_schema = """# Insurance_Data("months_as_customer","policy_state": {OH, NY, ...}, "age", "collision_type": {Side Collision, Rear Collision, Front Collision, Not Known}, "policy_number" : INTEGER, "incident_type" : {Multi-vehicle Collision, Parked Car, Single Vehicle Collision, Vehicle Theft}, "policy_bind_date", "policy_csl", "policy_deductable", "policy_annual_premium", "umbrella_limit", "insured_zip", "insured_sex" : {MALE, FEMALE}, "insured_education_level" : {MD, PhD, College, JD, Masters, Associate}, "insured_occupation" : {craft-repair, sales, tech-support, ...}, "insured_hobbies": {sleeping, reading, board-games, ...}, "insured_relationship": {husband, other-relative, own-child, unmarried, wife, not-in-family, ...}, "capital_gains": REAL, "capital_loss": REAL, "incident_date": {Example: 2020-01-25 00:00:00.000000, Hint: YYYY-MM-DD HH:MM:SS}, "incident_severity": {Major Damage, Total Loss, Minor Damage, Trivial Damage}, "authorities_contacted": {Police, Fire, Ambulance, Other, None, ...}, "incident_state": {WV, OH, NY, ...}, "incident_city":  {Columbus, Riverwood, Arlington}, "incident_location", "incident_hour_of_the_day": INTEGER, "number_of_vehicles_involved": INTEGER, "property_damage", "bodily_injuries": INTEGER, "witnesses": INTEGER, "police_report_available": {YES, NO, Not Known}, "total_claim_amount": REAL, "injury_claim": REAL, "property_claim": REAL, "vehicle_claim": REAL, "auto_make": {Saab, Mercedes, Accura, ...}, "auto_model":{E400, RAM, Tahoe, ...}, "auto_year": INTEGER, "fraud_reported": {Y, N})"""
+header = """###Postgre SQL tables, with their properties are given below. The year is represented in the 
+incident_date column """
+
+default_schema = """# Insurance_Data("months_as_customer","policy_state": {OH, NY, ...}, "age", "collision_type": {
+Side Collision, Rear Collision, Front Collision, Not Known}, "policy_number" : INTEGER, "incident_type" : {
+Multi-vehicle Collision, Parked Car, Single Vehicle Collision, Vehicle Theft}, "policy_bind_date", "policy_csl", 
+"policy_deductable", "policy_annual_premium", "umbrella_limit", "insured_zip", "insured_sex" : {MALE, FEMALE}, 
+"insured_education_level" : {MD, PhD, College, JD, Masters, Associate}, "insured_occupation" : {craft-repair, sales, 
+tech-support, ...}, "insured_hobbies": {sleeping, reading, board-games, ...}, "insured_relationship": {husband, 
+other-relative, own-child, unmarried, wife, not-in-family, ...}, "capital_gains": REAL, "capital_loss": REAL, 
+"incident_date": {Example: 2020-01-25 00:00:00.000000, Hint: YYYY-MM-DD HH:MM:SS}, "incident_severity": {Major 
+Damage, Total Loss, Minor Damage, Trivial Damage}, "authorities_contacted": {Police, Fire, Ambulance, Other, None, 
+...}, "incident_state": {WV, OH, NY, ...}, "incident_city":  {Columbus, Riverwood, Arlington}, "incident_location", 
+"incident_hour_of_the_day": INTEGER, "number_of_vehicles_involved": INTEGER, "property_damage", "bodily_injuries": 
+INTEGER, "witnesses": INTEGER, "police_report_available": {YES, NO, Not Known}, "total_claim_amount": REAL, 
+"injury_claim": REAL, "property_claim": REAL, "vehicle_claim": REAL, "auto_make": {Saab, Mercedes, Accura, ...}, 
+"auto_model":{E400, RAM, Tahoe, ...}, "auto_year": INTEGER, "fraud_reported": {Y, N}) """
 
 kwargs = {'min_length': 0, 'max_length': 300, 'length_no_input': True,
           'remove_input': True, 'end_sequence': '###', 'top_p': 1,
@@ -18,20 +34,20 @@ kwargs = {'min_length': 0, 'max_length': 300, 'length_no_input': True,
           'bad_words': ["bad"], 'remove_end_sequence': True}
 
 DATA_CSV_FILE = './gistfile1.txt'
-data = pd.read_csv(DATA_CSV_FILE, sep=';')
-data.name = 'insurance_data'
-conn = sqlite3.connect("insurance.db")
-try:
-    data.to_sql('insurance_data', conn)
-except:
-    print("loaded old table!")
-
-# HIST_CSV_FILE = './history.csv'
-
-example = """How many people live in policy state OH and had a collision of the kind Side Collision while driving a Saab at 15:00?"""
 
 
 def main():
+    example = """How many people live in policy state OH and had a collision of the kind Side Collision while driving 
+    a Saab at 15:00? """
+
+    data = pd.read_csv(DATA_CSV_FILE, sep=';')
+    data.name = 'insurance_data'
+    conn = sqlite3.connect("insurance.db")
+    try:
+        data.to_sql('insurance_data', conn)
+    except:
+        print("loaded old table!")
+
     # history = pd.read_csv(HIST_CSV_FILE)
     query = conn.execute("SELECT * From insurance_data")
     cols = [column[0] for column in query.description]
@@ -52,20 +68,15 @@ def main():
     st.markdown(hide_menu_style, unsafe_allow_html=True)
 
     st.title("Q. Research Edition")
-    # st.text("Hint: Try running again if the model fails the first time!")
 
     question_col, data_col = st.columns((1, 1))
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
-    # data_col.header("Query History")
-    # data_col.dataframe(data=history, width=None, height=None)
-
-    # schema = question_col.text_area(
-    #     "Put the schema here!", default_schema, max_chars=1000, height=150
-    # )
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
+    # change the default question to the last question
+    example = question_on_insurance
 
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=temperature)
     top_p_val = question_col.slider("Top p", 0.2, 1.0, value=top_p)
@@ -98,7 +109,8 @@ def main():
 
                         result = pd.read_sql(f"{model_output}", conn)
                         raw_output.write(f"Generated Query: {model_output}")
-                        question_col.write(f"Please try again with the same query and a higher temperature if ouput is incorrect!")
+                        question_col.write(
+                            f"Please try again with the same query and a higher temperature if ouput is incorrect!")
 
                         question_col.dataframe(data=result, width=None, height=None)
 
