@@ -37,7 +37,7 @@ DATA_CSV_FILE = './gistfile1.txt'
 
 
 def main():
-    example = """What are the top 3 incident types by number of incidents?"""
+    default_question = """What are the top 3 incident types by number of incidents?"""
 
     data = pd.read_csv(DATA_CSV_FILE, sep=';')
     data.name = 'insurance_data'
@@ -71,10 +71,9 @@ def main():
     question_col, answer_col = st.columns((1, 1))
     # answer_col.header("Insurance Data")
     question_on_insurance = question_col.text_area(
-        "Ask your question!", example, max_chars=2000, height=150
+        "Ask your question!", default_question, max_chars=2000, height=150
     )
     # change the default question to the last question
-    example = question_on_insurance
 
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=temperature)
     top_p_val = question_col.slider("Top p", 0.2, 1.0, value=top_p)
@@ -85,6 +84,7 @@ def main():
         submit_button = st.form_submit_button(label="Ask Q!")
         successful_run = False
         if submit_button:
+            default_question = question_on_insurance
             try_count = 10
             payload = {
                 "header": header,
