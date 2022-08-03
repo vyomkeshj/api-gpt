@@ -68,9 +68,9 @@ def main():
 
     st.title("Q. Research Edition")
 
-    question_col, data_col = st.columns((1, 1))
-    data_col.header("Insurance Data")
-    data_col.dataframe(data=insurance_table, width=None, height=None)
+    question_col, answer_col = st.columns((1, 1))
+    # answer_col.header("Insurance Data")
+    question_col.dataframe(data=insurance_table, width=None, height=None)
     question_on_insurance = question_col.text_area(
         "Ask your question!", example, max_chars=2000, height=150
     )
@@ -79,7 +79,7 @@ def main():
 
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=temperature)
     top_p_val = question_col.slider("Top p", 0.2, 1.0, value=top_p)
-    raw_output = question_col.text(f"raw_output(our model):")
+    raw_output = answer_col.text(f"raw_output(our model):")
 
     response = None
     with question_col.form(key="inputs"):
@@ -108,10 +108,10 @@ def main():
 
                         result = pd.read_sql(f"{model_output}", conn)
                         raw_output.write(f"Generated Query: {model_output}")
-                        question_col.write(
+                        answer_col.write(
                             f"Please try again with the same query and a higher temperature if ouput is incorrect!")
 
-                        question_col.dataframe(data=result, width=None, height=None)
+                        answer_col.dataframe(data=result, width=None, height=None)
 
                         try_count = 0
                         successful_run = True
