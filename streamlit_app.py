@@ -37,8 +37,7 @@ DATA_CSV_FILE = './gistfile1.txt'
 
 
 def main():
-    example = """How many people live in policy state OH and had a collision of the kind Side Collision while driving 
-    a Saab at 15:00? """
+    example = """What are the top 3 incident types by number of incidents?"""
 
     data = pd.read_csv(DATA_CSV_FILE, sep=';')
     data.name = 'insurance_data'
