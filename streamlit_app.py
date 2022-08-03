@@ -57,8 +57,8 @@ def main():
     question_col, data_col = st.columns((1, 1))
     data_col.header("Insurance Data")
     data_col.dataframe(data=insurance_table, width=None, height=None)
-    data_col.header("Query History")
-    data_col.dataframe(data=history, width=None, height=None)
+    # data_col.header("Query History")
+    # data_col.dataframe(data=history, width=None, height=None)
 
     # schema = question_col.text_area(
     #     "Put the schema here!", default_schema, max_chars=1000, height=150
