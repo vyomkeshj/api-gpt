@@ -79,7 +79,6 @@ def main():
     temperature_val = question_col.slider("Increase the randomness", 0.18, 0.90, value=temperature)
     top_p_val = question_col.slider("Top p", 0.2, 1.0, value=top_p)
     raw_output = answer_col.text(f"raw_output(our model):")
-    question_col.dataframe(data=insurance_table, width=None, height=None)
 
     response = None
     with question_col.form(key="inputs"):
@@ -124,6 +123,7 @@ def main():
                     break
             if not successful_run:
                 question_col.markdown("Please try using real column names when possible :)", unsafe_allow_html=True)
+    question_col.dataframe(data=insurance_table, width=None, height=None)
 
     st.text("V0.0.8")
 
